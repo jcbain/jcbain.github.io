@@ -11,7 +11,7 @@ canonifyurls        = true                              # Turns relative urls in
 [params]
     bloghead            = "Blog"                        # Full name shows on blog post pages
     firstname           = "James"                       # First name shows in introduction on main page
-    tagline             = "98% Chimpanzee, 50% Banana"       # Appears after the introduction
+    tagline             = "Computational Linguistics, Diversity, Anthropology"       # Appears after the introduction
     introheight         = "fullheight"                       # Input either 'medium' or 'large' or 'fullheight'
     themestyle          = "light"                        # Choose 'light' or 'dark'
     avatar              = "img/profile.jpg"             # Path to image in static folder eg. img/avatar.png, or comment out to remove
