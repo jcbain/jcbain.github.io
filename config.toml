@@ -1,4 +1,4 @@
-baseurl             = "/"   # Your domain name. Must end with "/"
+baseurl             = "https://jcbain.github.io/"   # Your domain name. Must end with "/"
 languageCode        = "en-us"
 title               = "Gradient Dissents"
 theme               = "introduction"
