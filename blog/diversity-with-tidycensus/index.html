@@ -101,7 +101,7 @@ crossorigin="anonymous"></script>
         <h2 class="title is-1 top-pad strong-post-title"><a href="https://jcbain.github.io/blog/diversity-with-tidycensus/">Diversity With Tidycensus</a></h2>
             <div class="post-data">
                 Feb 7, 2018 |
-                1 minute read
+                5 minutes read
             </div>
 
             
@@ -125,7 +125,125 @@ crossorigin="anonymous"></script>
     <div class="container markdown  fade-in two  top-pad">
         <p>There are very few recent packages that I can say shaved a month off of my dissertation work, particularly in a language like <code>R</code> where there are 3,000,000 ways to do the same thing. But <code>tidycensus</code>, my hat&rsquo;s off to you 👏👏👏! If you need Census data (or not) I strongly urge you to check out Kyle Walker&rsquo;s <a href="https://walkerke.github.io/tidycensus/">tidycnesus</a>.</p>
 
-<p>Diversity is a difficult concept. It might be even more difficult to assess simply because there are several ways to measure it. I&rsquo;m not going to discuss all of these measures nor am I going to really go over definitions in this post, but if you are interested in how to assess diversity I recommend checking out Scott Page&rsquo;s <a href="https://press.princeton.edu/titles/9208.html">Diversity and Complexity</a>.</p>
+<p>Diversity is a difficult concept. It might be even more difficult to assess simply because there are several ways to measure it. I&rsquo;m not going to discuss all of these measures nor am I going to really go over definitions in this post, but if you are interested in how to assess diversity I recommend checking out Scott Page&rsquo;s <a href="https://press.princeton.edu/titles/9208.html">Diversity and Complexity</a>. Instead, I&rsquo;m going to dive into the world of assessing the racial diversity<sup>1</sup> of cities using data gathered from the American Community Survey, but first a problem:</p>
+
+<p>Imagine you are tasked with assessing the racial diversity of a city block. Let&rsquo;s make it simple, we only need to assess the diversity of that city block for those individuals that live there. Forget about considering the people who just work or pass through (admittedly, this is important but adds complexity). How do you assess the &ldquo;diversity&rdquo; of the city block? Count the number of racial categories? Perhaps, but is a place that has 100,000 white individuals, 1 black individual and 1 Native Hawaiian more diverse than a location with 5,000 white individuals and 5,000 black individuals? Furthermore, even the smallest of towns will have a similar number of racial categories as some of the largest cities.</p>
+
+<p>What I want is a measure that considers both the number of unique categories along with the evenness of those categories. Sounds like an entropy measure, right? Well, in ecology, biologists are often interested in measuring the biodiversity of an ecosystem. To do so they calculate what is known as a <em>Shannon Index</em> $H$.</p>
+
+<p>$$H = -\sum_{i=1}^R p_i\ln p_i$$</p>
+
+<p>$R$ here is the total number of racial categories and $p_i$ is the proportion of $R$ made up by the $i$<sup>th</sup> category.</p>
+
+<p>And now for data! The Census&rsquo; data portal is the closest thing to hell on the internet after <code>r/TheDonald</code>, which is why I am eternally indebted to Kyle Walker and the godsend that is <code>tidycensus</code>. I encourage you to follow along so if you haven&rsquo;t already obtained a <strong>free</strong> api key from the Census API, go <a href="https://api.census.gov/data/key_signup.html">here</a><sup>2</sup>. We are going to need a handful of packages to get started.</p>
+
+<pre><code class="language-r">library(tidyverse)  
+library(tidycensus)
+library(sf) 
+library(vegan)
+library(viridis)
+library(tigris)
+library(ggthemes)
+
+options(tigris_class = &quot;sf&quot;)
+options(tigris_use_cache = TRUE)
+</code></pre>
+
+<p>Now we need a city. How about Cincinnati? I have no affiliation with Cincinnati but everyone seems to use New York for these types of tasks so why not shake things up? So to get started we need a list of the counties that make up the Cincinnati metro area along with the ACS codes pertaining to racial categories in the 2015 American Community Survey. The ACS provides estimates and for greater reliability we are using Census tracts. I am first going to create a vector of counties in the following format <code>&quot;StateAbberviationCountyName&quot;</code>. For example, Boone county, Missouri would become <code>&quot;MOBoone&quot;</code>. Then we need a vector of ACS codes that we want to collect.</p>
+
+<pre><code class="language-r">places &lt;- c(
+  'OH,Brown', 'OH,Butler', 'OH,Clermont', 'OH,Clinton', 'OH,Hamilton', 'OH,Warren', 'KY,Boone', 'KY,Bracken',
+  'KY,Campbell', 'KY,Gallatin', 'KY,Grant', 'KY,Kenton','KY,Mason', 'KY,Pendleton', 'IN,Dearborn', 'IN,Franklin', 
+  'IN,Ohio')
+
+racevars &lt;- c('B02001_002E', 'B02001_003E', 'B02001_004E', 'B02001_005E', 'B02001_006E',
+              'B02001_007E', 'B02001_008E', 'B02001_009E', 'B02001_010E')
+</code></pre>
+
+<p>Now we want to feed these into the <code>get_acs</code> function which will return the estimates from each tract, but first we have to wrap that in <code>purrr</code>&rsquo;s <code>map</code> capabilities along with some string manipulation provided by <code>stringr</code>.</p>
+
+<pre><code class="language-r">pop &lt;- reduce(
+  map(places, function(x) {
+    get_acs(geography = &quot;tract&quot;, variables = racevars, 
+            state = str_split(x ,pattern = ',')[[1]][1],county = str_split(x,pattern = ',')[[1]][2])
+  }), 
+  rbind
+)
+
+geographies &lt;- reduce(
+  map(places, function(x) {
+    get_acs(geography = &quot;tract&quot;,  variables = 'B01003_001',
+            state = str_split(x ,pattern = ',')[[1]][1],county = str_split(x,pattern = ',')[[1]][2] ,
+            geometry = TRUE, cb = FALSE)
+  }), 
+  rbind
+)
+
+water &lt;- reduce(
+  map(places, function(x){
+    area_water(str_split(x ,pattern = ',')[[1]][1], str_split(x,pattern = ',')[[1]][2], 
+               class = &quot;sf&quot;)
+  }),
+  rbind
+)
+</code></pre>
+
+<p>We are going to perform a variant of this 3 times in order to collect the estimates, the shapefiles of those regions, and the water polygons for better map detail. You may wonder why we are collecting the shapefiles separate from the estimates. Well, we have to perform an aggregation and aggregations don&rsquo;t work very well on <code>Multipolygon</code> attributes. Eventually, we will join these all together. Below we will borrow a Kyle Walker function to remove water areas from geographies.</p>
+
+<pre><code class="language-r">st_erase &lt;- function(x, y) {
+  st_difference(x, st_union(st_combine(y)))
+}
+
+cin_erase &lt;- st_erase(geographies, water)
+</code></pre>
+
+<p>And finally, we use the <code>vegan</code> package to calculate Shannon over the race variables that we collected in the <code>pop</code> dataframe. We want to calculate it for each Census tract to get an idea of where are the more racially diverse areas of the city.</p>
+
+<pre><code class="language-r"># calculate shannon on race and map it!
+pop %&gt;% 
+  group_by(GEOID) %&gt;%
+  summarise(diversity = diversity(estimate)) %&gt;%
+  left_join(cin_erase) %&gt;% 
+  ggplot(aes(fill = diversity, color = diversity)) +
+    geom_sf() + 
+    scale_fill_viridis() + 
+    scale_color_viridis() + 
+    theme_map()+
+    theme(panel.grid.major = element_line(colour = &quot;white&quot;))
+
+</code></pre>
+
+<p>This produces the following map:</p>
+
+<p><img src="https://jcbain.github.io/img/cin_diversity.png" alt="Cincinnati Map" /></p>
+
+<p>There are a couple things to note about this graph. The first is that the tracts are trimmed based off of geographical center of the city that I didn&rsquo;t show within the code (this will come in future posts). Secondly, the center of the city tends to be more diverse than the margins. In other words, the suburbs tend to be a less racially diverse than the center of the city.</p>
+
+<p>In future posts, I will continue down this path of measuring diversity and, more interestingly, why this is important to understanding other characteristics of a city.</p>
+
+<p><strong>Links that helped along the way</strong></p>
+
+<ol>
+<li><a href="http://pierreroudier.github.io/teaching/20170626-Pedometrics/20170626-soil-data.html">Loading and analysing spatial data with the sf package</a> by <em>Pierre Roudier</em></li>
+<li><a href="https://www.rdocumentation.org/packages/sf/versions/0.2-2/topics/crs">retrieve coordinate reference system from object</a></li>
+<li><a href="https://cran.r-project.org/web/packages/sf/vignettes/sf3.html#for-collections-of-geometry-sfc-and-simple-feature-collections-sf">Manipulating Simple Feature Geometries</a></li>
+</ol>
+
+<p><strong>Footnotes</strong></p>
+
+<p>1: Keep in mind that &ldquo;race&rdquo; here isn&rsquo;t meant as a biological category to classify individuals into groups. Instead, it is simply a Census categorization of individuals and how they identify themselves.</p>
+
+<p>2: This page is straight out of the 90s but it works.</p>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async src="path-to-mathjax/MathJax.js?config=TeX-AMS_CHTML"></script>
 
     </div>
 
