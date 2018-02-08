@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blogs on Gradient Dissents</title>
+    <link>https://jcbain.github.io/blog/</link>
+    <description>Recent content in Blogs on Gradient Dissents</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 07 Feb 2018 23:05:58 -0600</lastBuildDate>
+    
+	<atom:link href="https://jcbain.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Diversity With Tidycensus</title>
+      <link>https://jcbain.github.io/blog/diversity-with-tidycensus/</link>
+      <pubDate>Wed, 07 Feb 2018 23:05:58 -0600</pubDate>
+      
+      <guid>https://jcbain.github.io/blog/diversity-with-tidycensus/</guid>
+      <description>There are very few recent packages that I can say shaved a month off of my dissertation work, particularly in a language like R where there are 3,000,000 ways to do the same thing. But tidycensus, my hat&amp;rsquo;s off to you 👏👏👏! If you need Census data (or not) I strongly urge you to check out Kyle Walker&amp;rsquo;s tidycnesus.
+Diversity is a difficult concept. It might be even more difficult to assess simply because there are several ways to measure it.</description>
+    </item>
+    
+  </channel>
+</rss>
