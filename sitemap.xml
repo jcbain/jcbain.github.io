@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://jcbain.github.io/blog/geographic-subsets/</loc>
+    <lastmod>2018-02-18T17:33:28-06:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jcbain.github.io/blog/diversity-with-tidycensus/</loc>
     <lastmod>2018-02-07T23:05:58-06:00</lastmod>
   </url>
@@ -19,7 +24,7 @@
   
   <url>
     <loc>https://jcbain.github.io/blog/</loc>
-    <lastmod>2018-02-07T23:05:58-06:00</lastmod>
+    <lastmod>2018-02-18T17:33:28-06:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -30,7 +35,7 @@
   
   <url>
     <loc>https://jcbain.github.io/</loc>
-    <lastmod>2018-02-07T23:05:58-06:00</lastmod>
+    <lastmod>2018-02-18T17:33:28-06:00</lastmod>
     <priority>0</priority>
   </url>
   

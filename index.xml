@@ -6,10 +6,19 @@
     <description>Recent content on James Bain</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 07 Feb 2018 23:05:58 -0600</lastBuildDate>
+    <lastBuildDate>Sun, 18 Feb 2018 17:33:28 -0600</lastBuildDate>
     
 	<atom:link href="https://jcbain.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Geographic Distance Subsets in R</title>
+      <link>https://jcbain.github.io/blog/geographic-subsets/</link>
+      <pubDate>Sun, 18 Feb 2018 17:33:28 -0600</pubDate>
+      
+      <guid>https://jcbain.github.io/blog/geographic-subsets/</guid>
+      <description>This was one of those moments where my Googling ability failed me. For learning purposes, this is great, but in terms of time, well I&amp;rsquo;m never getting those couple of days in February back. So this is a story about how I thought I solved a problem that had yet to be solved. This is also a story about how I was stupid to think that I was the first to solve a problem that must be fairly common.</description>
+    </item>
     
     <item>
       <title>Diversity With Tidycensus</title>
