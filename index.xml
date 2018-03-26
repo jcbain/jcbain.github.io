@@ -6,10 +6,19 @@
     <description>Recent content on James Bain</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 18 Feb 2018 17:33:28 -0600</lastBuildDate>
+    <lastBuildDate>Sun, 25 Mar 2018 14:34:39 -0500</lastBuildDate>
     
 	<atom:link href="https://jcbain.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Presidential Collector Curves</title>
+      <link>https://jcbain.github.io/blog/presidential-collector-curves/</link>
+      <pubDate>Sun, 25 Mar 2018 14:34:39 -0500</pubDate>
+      
+      <guid>https://jcbain.github.io/blog/presidential-collector-curves/</guid>
+      <description>Confession 1: I&amp;rsquo;m less of a person this week. I had my appendix removed on Tuesday. It was my first surgical experience where I was anesthetized, which scared the hell out of me. Turns out that the doctor tells you to take some breathes and the next thing you know you are being woken up by a man named Nate who should really be more interested in your inebriated, albeit transcendental, commentary.</description>
+    </item>
     
     <item>
       <title>Geographic Distance Subsets in R</title>
