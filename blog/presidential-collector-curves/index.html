@@ -250,7 +250,7 @@ for word in obama_cleaned:
 
 <p>And now I&rsquo;m transition to the <code>R</code> portion of this post. Sorry <code>python</code>, none of your libraries are even worthy of standing next to <code>ggplot2</code>. Again, first come the packages.</p>
 
-<pre><code class="language-r">library(readr)
+<pre><code class="language-splus">library(readr)
 library(dplyr)
 library(purrr)
 library(ggplot2)
@@ -258,7 +258,7 @@ library(ggplot2)
 
 <p>And next we need to do some manipulation just so all of the files are easy to work with. We want them all in one data frame and to read them all from separate files, we need to use <code>purrr</code>&rsquo;s <code>map()</code> and <code>reduce()</code> functionality, along with <code>readr</code> to read in the files.</p>
 
-<pre><code class="language-r">files &lt;- dir(path = &quot;path/to/output/&quot;, pattern = &quot;*.csv&quot;, full.names = TRUE)
+<pre><code class="language-splus">files &lt;- dir(path = &quot;path/to/output/&quot;, pattern = &quot;*.csv&quot;, full.names = TRUE)
 
 data &lt;- files %&gt;%
   map(read_csv, col_names = c('inds', 'counts', 'vocab_size', 'year', 'president')) %&gt;% 
@@ -267,7 +267,7 @@ data &lt;- files %&gt;%
 
 <p>Time for some 👏plots👏!!!! Let&rsquo;s see how Obama did in 2009 in relation to all other Presidents.</p>
 
-<pre><code class="language-r">obama &lt;- filter(data, president == 'Obama')
+<pre><code class="language-splus">obama &lt;- filter(data, president == 'Obama')
 
 ggplot() +
    geom_line(data = data, aes(x = inds, y = counts, group = year), colour = 'grey') +
@@ -282,7 +282,7 @@ ggplot() +
 
 <p>But who are the rest of the curves? Let&rsquo;s take a look.</p>
 
-<pre><code class="language-r">full &lt;- data %&gt;%
+<pre><code class="language-splus">full &lt;- data %&gt;%
  mutate(combined = paste(year, president), normalized = counts/vocab_size)
 
 part &lt;- data %&gt;%
