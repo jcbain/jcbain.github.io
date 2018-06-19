@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Computational Linguistics, Diversity, Anthropology">
+
+<base href="https://jcbain.github.io/">
+<title>
+
+
+     Coin Flip Probability with Python 
+
+</title>
+<link rel="canonical" href="https://jcbain.github.io/blog/coin-flip-probs/">
+
+
+
+
+
+
+<script
+src="https://code.jquery.com/jquery-3.2.1.min.js"
+integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans">
+
+
+
+    <link rel="stylesheet" href="css/light-style.css">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="img/fav.ico"
+
+>
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="section" id="top">
+
+    <div class="container hero  fade-in one ">
+    <h1 class="bold-title is-1">Gradient Dissents</h1>
+    </div>
+
+
+<div class="section  fade-in two ">
+
+    <div class="container">
+    <hr>
+<nav class="nav nav-center">
+    <span id="nav-toggle" class="nav-toggle"  onclick="document.getElementById('nav-menu').classList.toggle('is-active');">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+    <div id="nav-menu" class="nav-left nav-menu">
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/">Main</a>
+      </span>
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/#about">About</a> 
+      </span>
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/blog">Back to blog</a>
+      </span> 
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/#contact">Contact</a>
+      </span>
+    
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/index.xml"><i class="fa fa-rss"></i></a>
+      </span>
+    
+    </div>
+</nav>
+<hr>
+    </div>
+
+    <div class="container  fade-in two ">
+        <h2 class="title is-1 top-pad strong-post-title"><a href="https://jcbain.github.io/blog/coin-flip-probs/">Coin Flip Probability with Python</a></h2>
+            <div class="post-data">
+                Jun 18, 2018 |
+                3 minutes read
+            </div>
+
+            
+                <div class="blog-share">
+                Share this:
+                
+                <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Read%20Coin%20Flip%20Probability%20with%20Python%20https%3a%2f%2fjcbain.github.io%2fblog%2fcoin-flip-probs%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+                </a>
+                
+                 
+                
+                
+                </div>
+            
+
+    </div>
+
+    <div class="container markdown  fade-in two  top-pad">
+        <p>I&rsquo;m writing up my dissertation&hellip;but occasionally I need a distraction. Don&rsquo;t get me wrong, I find studying hate speech very fascinating, but in all honesty, it gets to be a bit much sometimes. The world can be a depressing place. Plus, it&rsquo;s a dissertation; distractions are welcome in any flavor.</p>
+
+<p>Today my distraction came in the form of a Tweet by David Robinson demonstrating how flipping a coin and getting a heads and then another heads takes 6 flips on average while a heads then a tails only takes 4.</p>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">A <a href="https://twitter.com/hashtag/tidyverse?src=hash&amp;ref_src=twsrc%5Etfw">#tidyverse</a> simulation to demonstrate that if you wait for two heads in a row, it takes 6 flips on average, while you wait for a heads then a tails, it takes 4 flips on average<br><br>h/t <a href="https://twitter.com/CutTheKnotMath?ref_src=twsrc%5Etfw">@CutTheKnotMath</a> <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://t.co/V0zgOmCy7t">pic.twitter.com/V0zgOmCy7t</a></p>&mdash; David Robinson (@drob) <a href="https://twitter.com/drob/status/1008409373423611904?ref_src=twsrc%5Etfw">June 17, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>He did this using <code>tidyverse</code> functions and then using base-<code>R</code> matrix operations. Well, I wanted to create the <code>Python</code> version because of said dissertation. I did so by creating a set of functions.</p>
+
+<p>The first is simply a function to simulate flipping a fair coin&hellip;</p>
+
+<pre><code class="language-python">import numpy as np
+
+def flip_coin():
+    &quot;&quot;&quot;Simulate flipping a coin.
+    
+    Returns
+    -------
+    str
+        &quot;H&quot; for heads/ &quot;T&quot; for tails.
+    &quot;&quot;&quot;
+    flip = np.random.binomial(1, .5, 1)
+    if flip[0] == 1:
+        side = &quot;H&quot;
+    else:
+        side = &quot;T&quot;
+    return side
+</code></pre>
+
+<p>Then I need a function to flip the coin multiple times and to stop only when a certain sequence of sides were met. In other words, stop when two heads were flipped in a row. From this, I want the number of times it took to achieve this sequence to be returned.</p>
+
+<pre><code class="language-python">def flip_condition(stop_condition=['H', 'T'], print_opt=False):
+    &quot;&quot;&quot;Flip coin until flip pattern is met.
+    
+    Parameters
+    ----------
+    stop_condition: list
+        The sequence of flips to be matched before flipping stops.
+    
+    print_opt: bool
+        Option to print the sequence of flips.
+        
+    Returns
+    -------
+    int
+        The number of flips it took to match the pattern.
+    &quot;&quot;&quot;
+    flip_list = []
+    
+    current_index = 0
+    current_condition = None
+    while current_condition != stop_condition:
+        flip_list.append(flip_coin())
+        if len(flip_list) &gt;= len(stop_condition):
+            current_condition = [flip_list[i] for i in range(current_index - len(stop_condition) +1 , current_index + 1)]
+        else:
+            pass
+        current_index +=1
+        
+    if print_opt:
+        print(flip_list)
+    return current_index 
+</code></pre>
+
+<p>This also includes an option to print the sequence (in case you want to check my programming&hellip;I would 😜). And then I just run it many times and take the average for both conditions.</p>
+
+<pre><code class="language-python">mean_ht = np.mean([flip_condition(['H', 'T']) for i in range(10000)])
+mean_hh = np.mean([flip_condition(['H','H']) for i in range(10000)])
+
+print(&quot;Average # of flips to achieve heads and then heads again: {}&quot;.format(mean_hh))
+print(&quot;Average # of flips to achieve heads and then tails: {}&quot;.format(mean_ht))
+
+# Average # of flips to achieve heads and then heads again: 6.0081
+# Average # of flips to achieve heads and then tails: 3.9829
+</code></pre>
+
+<p>Looks like probability holds up in <code>Python</code>! Oh, but I also created the function to capture any pattern. How about heads, tails, heads?</p>
+
+<pre><code class="language-python">np.mean([flip_condition(['H', 'T', 'H']) for i in range(10000)])
+
+# 9.9231
+</code></pre>
+
+<p>or heads, heads, heads</p>
+
+<pre><code class="language-python">np.mean([flip_condition(['H', 'H', 'H']) for i in range(10000)])
+
+# 14.1544
+</code></pre>
+
+<p>Well that was neat! 🦖🦕</p>
+
+<p>If you want to play around with the code, I&rsquo;ve posted in this notebook <a href="https://github.com/jcbain/fun_side_projects/blob/master/hh_probs/coin_flip_props.ipynb">here</a></p>
+
+    </div>
+
+    <div class="disqus">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "gradient-dissents" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+<div class="container has-text-centered top-pad">
+<hr>
+<a href="https://jcbain.github.io/blog/coin-flip-probs/#top"><i class="fa fa-arrow-up"></i></a>
+<hr>
+</div>
+
+<div class="section" id="footer">
+    <div class="container has-text-centered">
+        
+            Introduction theme for Hugo. Life by ☕️ &#43; 🐕
+        
+    </div>
+</div>
+
+</div>
+</div>
+
+
+<script>
+$('a[href^="https:\/\/jcbain.github.io\/blog\/coin-flip-probs\/#"]').click(function(e) {
+    e.preventDefault();
+    var target = this.hash;
+    $('html, body').animate({
+    scrollTop: $(target).offset().top
+    }, 500);
+    return false;
+})
+</script>
+
+</body>
