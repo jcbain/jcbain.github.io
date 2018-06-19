@@ -140,165 +140,134 @@ crossorigin="anonymous"></script>
 <h3 id="an-example">An Example</h3>
 
 <p>Data preparation is done in <code>python</code> so first we read in a handful of packages that will aid in this task.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> re <span style="color:#75715e"># for regular expressions</span>
+<span style="color:#f92672">import</span> os <span style="color:#75715e"># for operating system operations</span>
+<span style="color:#f92672">import</span> csv <span style="color:#75715e"># for writing files</span>
 
-<pre><code class="language-python">import re # for regular expressions
-import os # for operating system operations
-import csv # for writing files
-
-from nltk.corpus import inaugural
-from nltk.corpus import stopwords
-from nltk.stem.wordnet import WordNetLemmatizer
-</code></pre>
-
+<span style="color:#f92672">from</span> nltk.corpus <span style="color:#f92672">import</span> inaugural
+<span style="color:#f92672">from</span> nltk.corpus <span style="color:#f92672">import</span> stopwords
+<span style="color:#f92672">from</span> nltk.stem.wordnet <span style="color:#f92672">import</span> WordNetLemmatizer</code></pre></div>
 <p>The fourth line is important here as that is the data, which is provided by the <code>nltk</code> library. It contains all of the Presidential inaugural speeches from Washington to Obama&rsquo;s first term. It also comes with convenient methods for tokenizing and lemmatization.</p>
 
 <p>We can take a look at Obama&rsquo;s before wrapping all of these steps into one function.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">obama <span style="color:#f92672">=</span> inaugural<span style="color:#f92672">.</span>words(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;2009-Obama.txt&#39;</span>)
+<span style="color:#66d9ef">print</span>(obama[<span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">9</span>])
 
-<pre><code class="language-python">obama = inaugural.words('2009-Obama.txt')
-print(obama[0:9])
-
-&gt; ['My', 'fellow', 'citizens', ':', 'I', 'stand', 'here', 'today', 'humbled']
-</code></pre>
-
+<span style="color:#f92672">&gt;</span> [<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;My&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;fellow&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;citizens&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;:&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;I&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;stand&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;here&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;today&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;humbled&#39;</span>]</code></pre></div>
 <p>Thank god for the <code>.words()</code> method here as it tokenizes the speech for us (although writing a tokenizer isn&rsquo;t too difficult 😉). Tokenization is the process of splitting words up into discrete units instead of storing them as a phrase or document. Here we can see that the tokens are the list of words of President Obama&rsquo;s speech.</p>
 
 <p>Next I&rsquo;m going to remove stopwords (common words) and special characters. Then I will lematize each word so that I am getting each word&rsquo;s root word. For example, &ldquo;ran&rdquo; and &ldquo;run&rdquo; are the same word but in different tenses. It&rsquo;s not really that neat if a President (or their speech writer) just uses different grammatical variations of the same word, is it? These tasks are rather simple, just some basic list manipulation.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">lemmatizer <span style="color:#f92672">=</span> WordNetLemmatizer()
 
-<pre><code class="language-python">lemmatizer = WordNetLemmatizer()
-
-obama_cleaned = [word.lower() for word in obama if word not in stopwords.words('english') and word.isalpha()]
-obama_cleaned = [lemmatizer.lemmatize(word) for word in obama_cleaned]
-</code></pre>
-
+obama_cleaned <span style="color:#f92672">=</span> [word<span style="color:#f92672">.</span>lower() <span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> obama <span style="color:#66d9ef">if</span> word <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> stopwords<span style="color:#f92672">.</span>words(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;english&#39;</span>) <span style="color:#f92672">and</span> word<span style="color:#f92672">.</span>isalpha()]
+obama_cleaned <span style="color:#f92672">=</span> [lemmatizer<span style="color:#f92672">.</span>lemmatize(word) <span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> obama_cleaned]</code></pre></div>
 <p>Next comes the 🥖 and 🧀 (shut up. they didn&rsquo;t have a butter emoji).</p>
-
-<pre><code class="language-python">unique_words = []
-word_len = []
-counter = 0
-inds = []
-for word in obama_cleaned:
-    inds.append(counter)
-    if word not in unique_words:
-        unique_words.append(word)
-    word_len.append(len(unique_words))
-    counter += 1
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">unique_words <span style="color:#f92672">=</span> []
+word_len <span style="color:#f92672">=</span> []
+counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+inds <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> obama_cleaned:
+    inds<span style="color:#f92672">.</span>append(counter)
+    <span style="color:#66d9ef">if</span> word <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> unique_words:
+        unique_words<span style="color:#f92672">.</span>append(word)
+    word_len<span style="color:#f92672">.</span>append(len(unique_words))
+    counter <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span></code></pre></div>
 <p>So above we start with a couple of empty lists. We will use these to store different bits of information. The first empty list, <code>unique_words</code>, will store each unique lemma (lemmatized word) when the iterator comes across one. The second list, <code>word_len</code>, will keep track of the number of unique words at the current word index. <em>You may realize that I said sample above when discussing the curve measurement, but in this case, I can increase the sample size by one rather simply to get a complete picture of the rate change.</em> The final list here, <code>ids</code> is the corresponding word index.</p>
 
 <p>Alright, now I&rsquo;m going to wrap this all in a nice function, add some spice to collect some metadata as we churn through these speeches and finally output a <code>.csv</code>.</p>
-
-<pre><code class="language-python">def collect_curve_data(file):
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">collect_curve_data</span>(file):
     
-    # create lemmatizer and read in corpus
-    lemmatizer = WordNetLemmatizer()
-    corpus = inaugural.words(file)
+    <span style="color:#75715e"># create lemmatizer and read in corpus</span>
+    lemmatizer <span style="color:#f92672">=</span> WordNetLemmatizer()
+    corpus <span style="color:#f92672">=</span> inaugural<span style="color:#f92672">.</span>words(file)
     
-    # remove stopwords and special character and lemmatize words
-    cleaned = [word.lower() for word in corpus if word not in stopwords.words('english') and word.isalpha()]
-    cleaned = [lemmatizer.lemmatize(word) for word in cleaned]
-    
+    <span style="color:#75715e"># remove stopwords and special character and lemmatize words</span>
+    cleaned <span style="color:#f92672">=</span> [word<span style="color:#f92672">.</span>lower() <span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> corpus <span style="color:#66d9ef">if</span> word <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> stopwords<span style="color:#f92672">.</span>words(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;english&#39;</span>) <span style="color:#f92672">and</span> word<span style="color:#f92672">.</span>isalpha()]
+    cleaned <span style="color:#f92672">=</span> [lemmatizer<span style="color:#f92672">.</span>lemmatize(word) <span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> cleaned]
     
     
-    # the meta data
-    metadata_regex = re.compile(r'(\d\d\d\d)-(\w+)\.txt')
-    meta_match = metadata_regex.search(file)
     
-    # find the collector's curve
-    unique_words = []
-    word_len = []
-    counter = 0
-    inds = []
-    for word in cleaned:
-        inds.append(counter)
-        if word not in unique_words:
-            unique_words.append(word)
-        word_len.append(len(unique_words))
-        counter += 1
+    <span style="color:#75715e"># the meta data</span>
+    metadata_regex <span style="color:#f92672">=</span> re<span style="color:#f92672">.</span>compile(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;(\d\d\d\d)-(\w+)\.txt&#39;</span>)
+    meta_match <span style="color:#f92672">=</span> metadata_regex<span style="color:#f92672">.</span>search(file)
     
-    # gather the meta data
-    year = [meta_match.group(1)] * len(word_len)
-    president = [meta_match.group(2)] * len(word_len)
-    vocab_size = [len(unique_words)] * len(word_len)
+    <span style="color:#75715e"># find the collector&#39;s curve</span>
+    unique_words <span style="color:#f92672">=</span> []
+    word_len <span style="color:#f92672">=</span> []
+    counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    inds <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> cleaned:
+        inds<span style="color:#f92672">.</span>append(counter)
+        <span style="color:#66d9ef">if</span> word <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> unique_words:
+            unique_words<span style="color:#f92672">.</span>append(word)
+        word_len<span style="color:#f92672">.</span>append(len(unique_words))
+        counter <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
     
-    # zip data together
-    rows = zip(*[inds, word_len, vocab_size, year, president])
+    <span style="color:#75715e"># gather the meta data</span>
+    year <span style="color:#f92672">=</span> [meta_match<span style="color:#f92672">.</span>group(<span style="color:#ae81ff">1</span>)] <span style="color:#f92672">*</span> len(word_len)
+    president <span style="color:#f92672">=</span> [meta_match<span style="color:#f92672">.</span>group(<span style="color:#ae81ff">2</span>)] <span style="color:#f92672">*</span> len(word_len)
+    vocab_size <span style="color:#f92672">=</span> [len(unique_words)] <span style="color:#f92672">*</span> len(word_len)
     
-    # write output
-    write_path = os.getcwd() + '/' + 'output'
-    output_file = '{}/{}{}.csv'.format(write_path, meta_match.group(1), meta_match.group(2))
+    <span style="color:#75715e"># zip data together</span>
+    rows <span style="color:#f92672">=</span> zip(<span style="color:#f92672">*</span>[inds, word_len, vocab_size, year, president])
     
-    if not os.path.exists(write_path):
-        os.mkdir(write_path)
+    <span style="color:#75715e"># write output</span>
+    write_path <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>getcwd() <span style="color:#f92672">+</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;/&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;output&#39;</span>
+    output_file <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;{}/{}{}.csv&#39;</span><span style="color:#f92672">.</span>format(write_path, meta_match<span style="color:#f92672">.</span>group(<span style="color:#ae81ff">1</span>), meta_match<span style="color:#f92672">.</span>group(<span style="color:#ae81ff">2</span>))
+    
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>exists(write_path):
+        os<span style="color:#f92672">.</span>mkdir(write_path)
         
     
-    with open(output_file, &quot;w&quot;) as f:
-        writer = csv.writer(f)
-        for row in rows:
-            writer.writerow(row)
+    <span style="color:#66d9ef">with</span> open(output_file, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;w&#34;</span>) <span style="color:#66d9ef">as</span> f:
+        writer <span style="color:#f92672">=</span> csv<span style="color:#f92672">.</span>writer(f)
+        <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> rows:
+            writer<span style="color:#f92672">.</span>writerow(row)
             
-    print('file written to: {}'.format(output_file))
-</code></pre>
-
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;file written to: {}&#39;</span><span style="color:#f92672">.</span>format(output_file))</code></pre></div>
 <p>Now we just iterate through all of the file ids and a collector&rsquo;s curve for each Presidential inaugural speech should be written.</p>
-
-<pre><code class="language-python">for file in inaugural.fileids():
-    collect_curve_data(file)
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">for</span> file <span style="color:#f92672">in</span> inaugural<span style="color:#f92672">.</span>fileids():
+    collect_curve_data(file)</code></pre></div>
 <h2 id="plotting-the-collector-s-curves">Plotting the Collector&rsquo;s Curves</h2>
 
 <p>And now I&rsquo;m transition to the <code>R</code> portion of this post. Sorry <code>python</code>, none of your libraries are even worthy of standing next to <code>ggplot2</code>. Again, first come the packages.</p>
-
-<pre><code class="language-splus">library(readr)
-library(dplyr)
-library(purrr)
-library(ggplot2)
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-splus" data-lang="splus"><span style="color:#f92672">library</span>(readr)
+<span style="color:#f92672">library</span>(dplyr)
+<span style="color:#f92672">library</span>(purrr)
+<span style="color:#f92672">library</span>(ggplot2)</code></pre></div>
 <p>And next we need to do some manipulation just so all of the files are easy to work with. We want them all in one data frame and to read them all from separate files, we need to use <code>purrr</code>&rsquo;s <code>map()</code> and <code>reduce()</code> functionality, along with <code>readr</code> to read in the files.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-splus" data-lang="splus">files <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">dir</span>(path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;path/to/output/&#34;</span>, pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;*.csv&#34;</span>, full.names <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)
 
-<pre><code class="language-splus">files &lt;- dir(path = &quot;path/to/output/&quot;, pattern = &quot;*.csv&quot;, full.names = TRUE)
-
-data &lt;- files %&gt;%
-  map(read_csv, col_names = c('inds', 'counts', 'vocab_size', 'year', 'president')) %&gt;% 
-  reduce(rbind)
-</code></pre>
-
+data <span style="color:#f92672">&lt;-</span> files <span style="color:#f92672">%&gt;%</span>
+  map(read_csv, col_names <span style="color:#f92672">=</span> <span style="color:#66d9ef">c</span>(<span style="color:#e6db74">&#39;inds&#39;</span>, <span style="color:#e6db74">&#39;counts&#39;</span>, <span style="color:#e6db74">&#39;vocab_size&#39;</span>, <span style="color:#e6db74">&#39;year&#39;</span>, <span style="color:#e6db74">&#39;president&#39;</span>)) <span style="color:#f92672">%&gt;%</span> 
+  reduce(<span style="color:#66d9ef">rbind</span>)</code></pre></div>
 <p>Time for some 👏plots👏!!!! Let&rsquo;s see how Obama did in 2009 in relation to all other Presidents.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-splus" data-lang="splus">obama <span style="color:#f92672">&lt;-</span> filter(data, president <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;Obama&#39;</span>)
 
-<pre><code class="language-splus">obama &lt;- filter(data, president == 'Obama')
-
-ggplot() +
-   geom_line(data = data, aes(x = inds, y = counts, group = year), colour = 'grey') +
-   geom_line(data = obama, aes(x = inds, y = counts), colour = 'blue') + 
-   theme_minimal() +
-   ggtitle(&quot;Obama&quot;, subtitle = &quot;2009&quot;)
-</code></pre>
-
+ggplot() <span style="color:#f92672">+</span>
+   geom_line(data <span style="color:#f92672">=</span> data, aes(x <span style="color:#f92672">=</span> inds, y <span style="color:#f92672">=</span> counts, group <span style="color:#f92672">=</span> year), colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;grey&#39;</span>) <span style="color:#f92672">+</span>
+   geom_line(data <span style="color:#f92672">=</span> obama, aes(x <span style="color:#f92672">=</span> inds, y <span style="color:#f92672">=</span> counts), colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;blue&#39;</span>) <span style="color:#f92672">+</span> 
+   theme_minimal() <span style="color:#f92672">+</span>
+   ggtitle(<span style="color:#e6db74">&#34;Obama&#34;</span>, subtitle <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;2009&#34;</span>)</code></pre></div>
 <p><img src="https://jcbain.github.io/img/post3/collectors_obama.png" alt="Obama" /></p>
 
 <p>And that&rsquo;s why they call it a curve. There are a couple of interesting things here. Obama uses quite a few unique words, all together it&rsquo;s around 800 or so. His rate of unique word usage is also pretty high, not the highest but certainly better than a lot of the other Presidents.</p>
 
 <p>But who are the rest of the curves? Let&rsquo;s take a look.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-splus" data-lang="splus">full <span style="color:#f92672">&lt;-</span> data <span style="color:#f92672">%&gt;%</span>
+ mutate(combined <span style="color:#f92672">=</span> <span style="color:#66d9ef">paste</span>(year, president), normalized <span style="color:#f92672">=</span> counts<span style="color:#f92672">/</span>vocab_size)
 
-<pre><code class="language-splus">full &lt;- data %&gt;%
- mutate(combined = paste(year, president), normalized = counts/vocab_size)
-
-part &lt;- data %&gt;%
- mutate(combined = paste(year, president), normalized = counts/vocab_size) %&gt;%
- select(-combined)
+part <span style="color:#f92672">&lt;-</span> data <span style="color:#f92672">%&gt;%</span>
+ mutate(combined <span style="color:#f92672">=</span> <span style="color:#66d9ef">paste</span>(year, president), normalized <span style="color:#f92672">=</span> counts<span style="color:#f92672">/</span>vocab_size) <span style="color:#f92672">%&gt;%</span>
+ select(<span style="color:#f92672">-</span>combined)
  
-ggplot() +
-  geom_line(data = part, aes(inds, counts, group = year), colour = 'grey', size = .5) +
-  geom_line(data = full, aes(inds, counts, colour = combined)) +
-  facet_wrap(~combined) + 
-  theme_minimal() +
-  theme(legend.position=&quot;none&quot;,
-        axis.text.x = element_text(angle = 90, hjust = 1)) 
-
-</code></pre>
-
+ggplot() <span style="color:#f92672">+</span>
+  geom_line(data <span style="color:#f92672">=</span> part, aes(inds, counts, group <span style="color:#f92672">=</span> year), colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;grey&#39;</span>, size <span style="color:#f92672">=</span> <span style="color:#ae81ff">.5</span>) <span style="color:#f92672">+</span>
+  geom_line(data <span style="color:#f92672">=</span> full, aes(inds, counts, colour <span style="color:#f92672">=</span> combined)) <span style="color:#f92672">+</span>
+  facet_wrap(<span style="color:#f92672">~</span>combined) <span style="color:#f92672">+</span> 
+  theme_minimal() <span style="color:#f92672">+</span>
+  theme(legend.position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;none&#34;</span>,
+        axis.text.x <span style="color:#f92672">=</span> element_text(angle <span style="color:#f92672">=</span> <span style="color:#ae81ff">90</span>, hjust <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>)) </code></pre></div>
 <p><img src="https://jcbain.github.io/img/post3/collectors_all-presidents.png" alt="All Presidents" /></p>
 
 <p>There are a couple things to note. 1973 Washington must have had somewhere better to be. For Harrison, this was the highlight of his life (I guess that makes sense). Okay, these two observations are simply assuming that there are fewer/more unique words simply because the speeches were shorter/longer. I don&rsquo;t know that for sure, but it would be easy to find out. I willing to bet on it. Pierce kept things interesting throughout his speech, at least word-wise. That can not be said for 1973 Nixon.</p>

@@ -136,83 +136,67 @@ crossorigin="anonymous"></script>
 <p>$R$ here is the total number of racial categories and $p_i$ is the proportion of $R$ made up by the $i$<sup>th</sup> category.</p>
 
 <p>And now for data! The Census&rsquo; data portal is the closest thing to hell on the internet after <code>r/TheDonald</code>, which is why I am eternally indebted to Kyle Walker and the godsend that is <code>tidycensus</code>. I encourage you to follow along so if you haven&rsquo;t already obtained a <strong>free</strong> api key from the Census API, go <a href="https://api.census.gov/data/key_signup.html">here</a><sup>2</sup>. We are going to need a handful of packages to get started.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#f92672">library</span>(tidyverse)  
+<span style="color:#f92672">library</span>(tidycensus)
+<span style="color:#f92672">library</span>(sf) 
+<span style="color:#f92672">library</span>(vegan)
+<span style="color:#f92672">library</span>(viridis)
+<span style="color:#f92672">library</span>(tigris)
+<span style="color:#f92672">library</span>(ggthemes)
 
-<pre><code class="language-r">library(tidyverse)  
-library(tidycensus)
-library(sf) 
-library(vegan)
-library(viridis)
-library(tigris)
-library(ggthemes)
-
-options(tigris_class = &quot;sf&quot;)
-options(tigris_use_cache = TRUE)
-</code></pre>
-
+<span style="color:#66d9ef">options</span>(tigris_class <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;sf&#34;</span>)
+<span style="color:#66d9ef">options</span>(tigris_use_cache <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)</code></pre></div>
 <p>Now we need a city. How about Cincinnati? I have no affiliation with Cincinnati but everyone seems to use New York for these types of tasks so why not shake things up? So to get started we need a list of the counties that make up the Cincinnati metro area along with the ACS codes pertaining to racial categories in the 2015 American Community Survey. The ACS provides estimates and for greater reliability we are using Census tracts. I am first going to create a vector of counties in the following format <code>&quot;StateAbberviationCountyName&quot;</code>. For example, Boone county, Missouri would become <code>&quot;MOBoone&quot;</code>. Then we need a vector of ACS codes that we want to collect.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">places <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">c</span>(
+  <span style="color:#e6db74">&#39;OH,Brown&#39;</span>, <span style="color:#e6db74">&#39;OH,Butler&#39;</span>, <span style="color:#e6db74">&#39;OH,Clermont&#39;</span>, <span style="color:#e6db74">&#39;OH,Clinton&#39;</span>, <span style="color:#e6db74">&#39;OH,Hamilton&#39;</span>, <span style="color:#e6db74">&#39;OH,Warren&#39;</span>, <span style="color:#e6db74">&#39;KY,Boone&#39;</span>, <span style="color:#e6db74">&#39;KY,Bracken&#39;</span>,
+  <span style="color:#e6db74">&#39;KY,Campbell&#39;</span>, <span style="color:#e6db74">&#39;KY,Gallatin&#39;</span>, <span style="color:#e6db74">&#39;KY,Grant&#39;</span>, <span style="color:#e6db74">&#39;KY,Kenton&#39;</span>,<span style="color:#e6db74">&#39;KY,Mason&#39;</span>, <span style="color:#e6db74">&#39;KY,Pendleton&#39;</span>, <span style="color:#e6db74">&#39;IN,Dearborn&#39;</span>, <span style="color:#e6db74">&#39;IN,Franklin&#39;</span>, 
+  <span style="color:#e6db74">&#39;IN,Ohio&#39;</span>)
 
-<pre><code class="language-r">places &lt;- c(
-  'OH,Brown', 'OH,Butler', 'OH,Clermont', 'OH,Clinton', 'OH,Hamilton', 'OH,Warren', 'KY,Boone', 'KY,Bracken',
-  'KY,Campbell', 'KY,Gallatin', 'KY,Grant', 'KY,Kenton','KY,Mason', 'KY,Pendleton', 'IN,Dearborn', 'IN,Franklin', 
-  'IN,Ohio')
-
-racevars &lt;- c('B02001_002E', 'B02001_003E', 'B02001_004E', 'B02001_005E', 'B02001_006E',
-              'B02001_007E', 'B02001_008E', 'B02001_009E', 'B02001_010E')
-</code></pre>
-
+racevars <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">c</span>(<span style="color:#e6db74">&#39;B02001_002E&#39;</span>, <span style="color:#e6db74">&#39;B02001_003E&#39;</span>, <span style="color:#e6db74">&#39;B02001_004E&#39;</span>, <span style="color:#e6db74">&#39;B02001_005E&#39;</span>, <span style="color:#e6db74">&#39;B02001_006E&#39;</span>,
+              <span style="color:#e6db74">&#39;B02001_007E&#39;</span>, <span style="color:#e6db74">&#39;B02001_008E&#39;</span>, <span style="color:#e6db74">&#39;B02001_009E&#39;</span>, <span style="color:#e6db74">&#39;B02001_010E&#39;</span>)</code></pre></div>
 <p>Now we want to feed these into the <code>get_acs</code> function which will return the estimates from each tract, but first we have to wrap that in <code>purrr</code>&rsquo;s <code>map</code> capabilities along with some string manipulation provided by <code>stringr</code>.</p>
-
-<pre><code class="language-r">pop &lt;- reduce(
-  map(places, function(x) {
-    get_acs(geography = &quot;tract&quot;, variables = racevars, 
-            state = str_split(x ,pattern = ',')[[1]][1],county = str_split(x,pattern = ',')[[1]][2])
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pop <span style="color:#f92672">&lt;-</span> reduce(
+  map(places, <span style="color:#66d9ef">function</span>(x) {
+    get_acs(geography <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;tract&#34;</span>, variables <span style="color:#f92672">=</span> racevars, 
+            state <span style="color:#f92672">=</span> str_split(x ,pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span>)[[<span style="color:#ae81ff">1</span>]][<span style="color:#ae81ff">1</span>],county <span style="color:#f92672">=</span> str_split(x,pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span>)[[<span style="color:#ae81ff">1</span>]][<span style="color:#ae81ff">2</span>])
   }), 
-  rbind
+  <span style="color:#66d9ef">rbind</span>
 )
 
-geographies &lt;- reduce(
-  map(places, function(x) {
-    get_acs(geography = &quot;tract&quot;,  variables = 'B01003_001',
-            state = str_split(x ,pattern = ',')[[1]][1],county = str_split(x,pattern = ',')[[1]][2] ,
-            geometry = TRUE, cb = FALSE)
+geographies <span style="color:#f92672">&lt;-</span> reduce(
+  map(places, <span style="color:#66d9ef">function</span>(x) {
+    get_acs(geography <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;tract&#34;</span>,  variables <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;B01003_001&#39;</span>,
+            state <span style="color:#f92672">=</span> str_split(x ,pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span>)[[<span style="color:#ae81ff">1</span>]][<span style="color:#ae81ff">1</span>],county <span style="color:#f92672">=</span> str_split(x,pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span>)[[<span style="color:#ae81ff">1</span>]][<span style="color:#ae81ff">2</span>] ,
+            geometry <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>, cb <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)
   }), 
-  rbind
+  <span style="color:#66d9ef">rbind</span>
 )
 
-water &lt;- reduce(
-  map(places, function(x){
-    area_water(str_split(x ,pattern = ',')[[1]][1], str_split(x,pattern = ',')[[1]][2], 
-               class = &quot;sf&quot;)
+water <span style="color:#f92672">&lt;-</span> reduce(
+  map(places, <span style="color:#66d9ef">function</span>(x){
+    area_water(str_split(x ,pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span>)[[<span style="color:#ae81ff">1</span>]][<span style="color:#ae81ff">1</span>], str_split(x,pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span>)[[<span style="color:#ae81ff">1</span>]][<span style="color:#ae81ff">2</span>], 
+               class <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;sf&#34;</span>)
   }),
-  rbind
-)
-</code></pre>
-
+  <span style="color:#66d9ef">rbind</span>
+)</code></pre></div>
 <p>We are going to perform a variant of this 3 times in order to collect the estimates, the shapefiles of those regions, and the water polygons for better map detail. You may wonder why we are collecting the shapefiles separate from the estimates. Well, we have to perform an aggregation and aggregations don&rsquo;t work very well on <code>Multipolygon</code> attributes. Eventually, we will join these all together. Below we will borrow a Kyle Walker function to remove water areas from geographies.</p>
-
-<pre><code class="language-r">st_erase &lt;- function(x, y) {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">st_erase <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(x, y) {
   st_difference(x, st_union(st_combine(y)))
 }
 
-cin_erase &lt;- st_erase(geographies, water)
-</code></pre>
-
+cin_erase <span style="color:#f92672">&lt;-</span> st_erase(geographies, water)</code></pre></div>
 <p>And finally, we use the <code>vegan</code> package to calculate Shannon over the race variables that we collected in the <code>pop</code> dataframe. We want to calculate it for each Census tract to get an idea of where are the more racially diverse areas of the city.</p>
-
-<pre><code class="language-r"># calculate shannon on race and map it!
-pop %&gt;% 
-  group_by(GEOID) %&gt;%
-  summarise(diversity = diversity(estimate)) %&gt;%
-  left_join(cin_erase) %&gt;% 
-  ggplot(aes(fill = diversity, color = diversity)) +
-    geom_sf() + 
-    scale_fill_viridis() + 
-    scale_color_viridis() + 
-    theme_map()+
-    theme(panel.grid.major = element_line(colour = &quot;white&quot;))
-
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># calculate shannon on race and map it!</span>
+pop <span style="color:#f92672">%&gt;%</span> 
+  group_by(GEOID) <span style="color:#f92672">%&gt;%</span>
+  summarise(diversity <span style="color:#f92672">=</span> diversity(estimate)) <span style="color:#f92672">%&gt;%</span>
+  left_join(cin_erase) <span style="color:#f92672">%&gt;%</span> 
+  ggplot(aes(fill <span style="color:#f92672">=</span> diversity, color <span style="color:#f92672">=</span> diversity)) <span style="color:#f92672">+</span>
+    geom_sf() <span style="color:#f92672">+</span> 
+    scale_fill_viridis() <span style="color:#f92672">+</span> 
+    scale_color_viridis() <span style="color:#f92672">+</span> 
+    theme_map()<span style="color:#f92672">+</span>
+    theme(panel.grid.major <span style="color:#f92672">=</span> element_line(colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;white&#34;</span>))</code></pre></div>
 <p>This produces the following map:</p>
 
 <p><img src="https://jcbain.github.io/img/post1/cin_diversity.png" alt="Cincinnati Map" /></p>
