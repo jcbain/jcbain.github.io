@@ -130,65 +130,65 @@ crossorigin="anonymous"></script>
 <p>I&rsquo;m interested in cities and their people, and city metropolitan areas often span multiple counties, however, not all counties are equal particularly in terms of area. Seriously, look up San Bernardino county, California and see how many New England states you can fit inside it. Well, the problem is that you are often not interested in all of the super-geographies during an analysis. Instead, you are interested in some sub-geographies that make up a certain radius around a coordinate. This was my issue and this post is going to walk you through two different solutions: one out of naïveté and the other a bit more researched.</p>
 
 <p>Kansas City is the perfect candidate to test subsetting around a coordinate. Its metropolitan area spans 9 counties and 2 states (the majority in Missouri and some in Kansas). Just to be exhaustive, I will be collecting on a 15 county area. It also happens to be my place of birth and where I spent the majority of the first 18 years of my life. I will be using <code>tidycensus</code> to gather the Census tracts for each of these counties along with the 2015 American Community Survey estimates on the proportion of Black Americans living in each tract. Take a look at my <a href="https://jcbain.github.io/blog/diversity-with-tidycensus/">previous post</a> for a more detailed explanation of using <code>tidycensus</code> to collect ACS data. First we will load in our packages and then gather our data.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#f92672">library</span>(tidyverse)  
-<span style="color:#f92672">library</span>(tidycensus)
-<span style="color:#f92672">library</span>(sf) 
-<span style="color:#f92672">library</span>(vegan)
-<span style="color:#f92672">library</span>(viridis)
-<span style="color:#f92672">library</span>(tigris)
-<span style="color:#f92672">library</span>(ggthemes)
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#069;font-weight:bold">library</span>(tidyverse)  
+<span style="color:#069;font-weight:bold">library</span>(tidycensus)
+<span style="color:#069;font-weight:bold">library</span>(sf) 
+<span style="color:#069;font-weight:bold">library</span>(vegan)
+<span style="color:#069;font-weight:bold">library</span>(viridis)
+<span style="color:#069;font-weight:bold">library</span>(tigris)
+<span style="color:#069;font-weight:bold">library</span>(ggthemes)
 
-<span style="color:#66d9ef">options</span>(tigris_class <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;sf&#34;</span>)
-<span style="color:#66d9ef">options</span>(tigris_use_cache <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)
+<span style="color:#069">options</span>(tigris_class <span style="color:#555">=</span> <span style="color:#c30">&#34;sf&#34;</span>)
+<span style="color:#069">options</span>(tigris_use_cache <span style="color:#555">=</span> <span style="color:#069;font-weight:bold">TRUE</span>)
 
-<span style="color:#75715e"># ACS 2015 race variable codes</span>
+<span style="color:#09f;font-style:italic"># ACS 2015 race variable codes</span>
 
-racevars <span style="color:#f92672">=</span> <span style="color:#66d9ef">c</span>(<span style="color:#e6db74">&#39;B02001_001E&#39;</span>, <span style="color:#e6db74">&#39;B02001_003E&#39;</span>)
+racevars <span style="color:#555">=</span> <span style="color:#078;font-weight:bold">c</span>(<span style="color:#c30">&#39;B02001_001E&#39;</span>, <span style="color:#c30">&#39;B02001_003E&#39;</span>)
 
-<span style="color:#75715e"># Counties </span>
+<span style="color:#09f;font-style:italic"># Counties </span>
 
-places <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">c</span>(<span style="color:#e6db74">&#39;MO,Clay&#39;</span>, <span style="color:#e6db74">&#39;MO,Jackson&#39;</span>, <span style="color:#e6db74">&#39;MO,Platte&#39;</span>, <span style="color:#e6db74">&#39;MO,Cass&#39;</span>, <span style="color:#e6db74">&#39;MO,Lafayette&#39;</span>,
-            <span style="color:#e6db74">&#39;MO,Ray&#39;</span>, <span style="color:#e6db74">&#39;MO,Clinton&#39;</span>, <span style="color:#e6db74">&#39;MO,Bates&#39;</span>, <span style="color:#e6db74">&#39;MO,Caldwell&#39;</span>, <span style="color:#e6db74">&#39;KS,Johnson&#39;</span>,
-            <span style="color:#e6db74">&#39;KS,Wyandotte&#39;</span>, <span style="color:#e6db74">&#39;KS,Leavenworth&#39;</span>, <span style="color:#e6db74">&#39;KS,Miami&#39;</span>, <span style="color:#e6db74">&#39;KS,Linn&#39;</span>, <span style="color:#e6db74">&#39;KS,Franklin&#39;</span>)
+places <span style="color:#555">&lt;-</span> <span style="color:#078;font-weight:bold">c</span>(<span style="color:#c30">&#39;MO,Clay&#39;</span>, <span style="color:#c30">&#39;MO,Jackson&#39;</span>, <span style="color:#c30">&#39;MO,Platte&#39;</span>, <span style="color:#c30">&#39;MO,Cass&#39;</span>, <span style="color:#c30">&#39;MO,Lafayette&#39;</span>,
+            <span style="color:#c30">&#39;MO,Ray&#39;</span>, <span style="color:#c30">&#39;MO,Clinton&#39;</span>, <span style="color:#c30">&#39;MO,Bates&#39;</span>, <span style="color:#c30">&#39;MO,Caldwell&#39;</span>, <span style="color:#c30">&#39;KS,Johnson&#39;</span>,
+            <span style="color:#c30">&#39;KS,Wyandotte&#39;</span>, <span style="color:#c30">&#39;KS,Leavenworth&#39;</span>, <span style="color:#c30">&#39;KS,Miami&#39;</span>, <span style="color:#c30">&#39;KS,Linn&#39;</span>, <span style="color:#c30">&#39;KS,Franklin&#39;</span>)
 
-<span style="color:#75715e"># Collect the variables</span>
+<span style="color:#09f;font-style:italic"># Collect the variables</span>
 
-pop <span style="color:#f92672">&lt;-</span> reduce(
-  map(places, <span style="color:#66d9ef">function</span>(x) {
-    get_acs(geography <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;tract&#34;</span>, variables <span style="color:#f92672">=</span> racevars, 
-            state <span style="color:#f92672">=</span> str_split(x ,pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span>)[[<span style="color:#ae81ff">1</span>]][<span style="color:#ae81ff">1</span>],county <span style="color:#f92672">=</span> str_split(x,pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span>)[[<span style="color:#ae81ff">1</span>]][<span style="color:#ae81ff">2</span>])
+pop <span style="color:#555">&lt;-</span> reduce(
+  map(places, <span style="color:#069;font-weight:bold">function</span>(x) {
+    get_acs(geography <span style="color:#555">=</span> <span style="color:#c30">&#34;tract&#34;</span>, variables <span style="color:#555">=</span> racevars, 
+            state <span style="color:#555">=</span> str_split(x ,pattern <span style="color:#555">=</span> <span style="color:#c30">&#39;,&#39;</span>)[[<span style="color:#f60">1</span>]][<span style="color:#f60">1</span>],county <span style="color:#555">=</span> str_split(x,pattern <span style="color:#555">=</span> <span style="color:#c30">&#39;,&#39;</span>)[[<span style="color:#f60">1</span>]][<span style="color:#f60">2</span>])
   }), 
-  <span style="color:#66d9ef">rbind</span>
+  <span style="color:#069">rbind</span>
 )
 
-<span style="color:#75715e"># Collect the simple features for mapping</span>
+<span style="color:#09f;font-style:italic"># Collect the simple features for mapping</span>
 
-geographies <span style="color:#f92672">&lt;-</span> reduce(
-  map(places, <span style="color:#66d9ef">function</span>(x) {
-    get_acs(geography <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;tract&#34;</span>,  variables <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;B01003_001&#34;</span>,
-            state <span style="color:#f92672">=</span> str_split(x ,pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span>)[[<span style="color:#ae81ff">1</span>]][<span style="color:#ae81ff">1</span>],county <span style="color:#f92672">=</span> str_split(x,pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span>)[[<span style="color:#ae81ff">1</span>]][<span style="color:#ae81ff">2</span>] ,
-            geometry <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)
+geographies <span style="color:#555">&lt;-</span> reduce(
+  map(places, <span style="color:#069;font-weight:bold">function</span>(x) {
+    get_acs(geography <span style="color:#555">=</span> <span style="color:#c30">&#34;tract&#34;</span>,  variables <span style="color:#555">=</span> <span style="color:#c30">&#34;B01003_001&#34;</span>,
+            state <span style="color:#555">=</span> str_split(x ,pattern <span style="color:#555">=</span> <span style="color:#c30">&#39;,&#39;</span>)[[<span style="color:#f60">1</span>]][<span style="color:#f60">1</span>],county <span style="color:#555">=</span> str_split(x,pattern <span style="color:#555">=</span> <span style="color:#c30">&#39;,&#39;</span>)[[<span style="color:#f60">1</span>]][<span style="color:#f60">2</span>] ,
+            geometry <span style="color:#555">=</span> <span style="color:#069;font-weight:bold">TRUE</span>)
   }), 
-  <span style="color:#66d9ef">rbind</span>
+  <span style="color:#069">rbind</span>
 )</code></pre></div>
 <p>Then I have to do some pre-processing. <code>B02001_001E</code> is the variable for the total number of people estimate for the selected geography and <code>B02001_003E</code> is the estimate of African Americans within a geography. I want a proportion instead of raw count so I have to convert the current <code>pop</code> data frame into wide format. Wide format allows me to use mutate in order to calculate a proportion. I then join this back to the geographic simple features data frame <code>geographies</code> so that we can visualize the proportion graphically.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pop <span style="color:#f92672">%&lt;&gt;%</span>
-  select(<span style="color:#f92672">-</span>moe) <span style="color:#f92672">%&gt;%</span>
-  spread(variable, estimate) <span style="color:#f92672">%&gt;%</span>
-  group_by(GEOID) <span style="color:#f92672">%&gt;%</span>
-  mutate(aa <span style="color:#f92672">=</span> (B02001_003<span style="color:#f92672">/</span>B02001_001)) <span style="color:#f92672">%&gt;%</span>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pop <span style="color:#555">%&lt;&gt;%</span>
+  select(<span style="color:#555">-</span>moe) <span style="color:#555">%&gt;%</span>
+  spread(variable, estimate) <span style="color:#555">%&gt;%</span>
+  group_by(GEOID) <span style="color:#555">%&gt;%</span>
+  mutate(aa <span style="color:#555">=</span> (B02001_003<span style="color:#555">/</span>B02001_001)) <span style="color:#555">%&gt;%</span>
   ungroup()
 
-kc <span style="color:#f92672">&lt;-</span> geographies <span style="color:#f92672">%&gt;%</span>
-  left_join(pop, by <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;GEOID&#39;</span>) </code></pre></div>
+kc <span style="color:#555">&lt;-</span> geographies <span style="color:#555">%&gt;%</span>
+  left_join(pop, by <span style="color:#555">=</span> <span style="color:#c30">&#39;GEOID&#39;</span>) </code></pre></div>
 <p>Let&rsquo;s go ahead and visualize what we have here.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">kc <span style="color:#f92672">%&gt;%</span>
-  ggplot(aes(fill <span style="color:#f92672">=</span> aa)) <span style="color:#f92672">+</span> 
-  geom_sf( colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#ffffff&#39;</span>, size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.1</span>) <span style="color:#f92672">+</span> 
-  scale_fill_viridis(option <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;inferno&#34;</span>, direction <span style="color:#f92672">=</span> <span style="color:#ae81ff">-1</span>) <span style="color:#f92672">+</span>
-  labs(title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Kansas City&#39;s Black American Population&#34;</span>,
-       subtitle <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Proportion by Census Tract&#34;</span> ,
-       caption <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Data: 2015 American Community Survey&#39;</span>)</code></pre></div>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">kc <span style="color:#555">%&gt;%</span>
+  ggplot(aes(fill <span style="color:#555">=</span> aa)) <span style="color:#555">+</span> 
+  geom_sf( colour <span style="color:#555">=</span> <span style="color:#c30">&#39;#ffffff&#39;</span>, size <span style="color:#555">=</span> <span style="color:#f60">0.1</span>) <span style="color:#555">+</span> 
+  scale_fill_viridis(option <span style="color:#555">=</span> <span style="color:#c30">&#34;inferno&#34;</span>, direction <span style="color:#555">=</span> <span style="color:#f60">-1</span>) <span style="color:#555">+</span>
+  labs(title <span style="color:#555">=</span> <span style="color:#c30">&#34;Kansas City&#39;s Black American Population&#34;</span>,
+       subtitle <span style="color:#555">=</span> <span style="color:#c30">&#34;Proportion by Census Tract&#34;</span> ,
+       caption <span style="color:#555">=</span> <span style="color:#c30">&#39;Data: 2015 American Community Survey&#39;</span>)</code></pre></div>
 <p><img src="https://jcbain.github.io/img/post2/kc_aa_prop_full.png" alt="Kansas City Map" /></p>
 
 <p>Oh my! I&rsquo;m more interested in the city center and the surrounding suburbs, not really those who are in the exoburbs. Let&rsquo;s try those within a 40 kilometer radius of the center of Kansas City, MO. Any tract that is captured in this circled area below is permitted. Everyone else, well thanks for playing and perhaps next time.</p>
@@ -202,39 +202,39 @@ kc <span style="color:#f92672">&lt;-</span> geographies <span style="color:#f926
 <p>I felt okay about this method until I came across a much cleaner and more elegant way of achieving the stated goal but I am also a believer in working through problems on your own and configuring your own solutions, even if it means embarrassing yourself when you put it on the web.</p>
 
 <p>My algorithm is as follows. First, declare a center point for the city of Kansas City. This was as difficult as Googling &lsquo;Kansas City coordinates&rsquo;. Then, I would write a function that can be applied row-wise to a data frame to calculate the distance between the row&rsquo;s simple feature and the geographic center of Kansas City. I run this function over the <code>kc</code> data frame created above. Then I simply subset for those rows within 40 km and then plot. Voilà!</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># Kansas City Coordinates to calculate distance from </span>
-kc_center <span style="color:#f92672">&lt;-</span> st_sfc(st_point(<span style="color:#66d9ef">c</span>(<span style="color:#ae81ff">-94.5786</span> ,  <span style="color:#ae81ff">39.0997</span>)))
-kc_center <span style="color:#f92672">=</span> st_sf(geom <span style="color:#f92672">=</span> kc_center)
-st_crs(kc_center) <span style="color:#f92672">=</span> <span style="color:#ae81ff">4326</span>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#09f;font-style:italic"># Kansas City Coordinates to calculate distance from </span>
+kc_center <span style="color:#555">&lt;-</span> st_sfc(st_point(<span style="color:#078;font-weight:bold">c</span>(<span style="color:#f60">-94.5786</span> ,  <span style="color:#f60">39.0997</span>)))
+kc_center <span style="color:#555">=</span> st_sf(geom <span style="color:#555">=</span> kc_center)
+st_crs(kc_center) <span style="color:#555">=</span> <span style="color:#f60">4326</span>
 
-<span style="color:#75715e"># function to calculate the closet point of each census tract</span>
-find_distance <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(<span style="color:#66d9ef">row</span>, coord){
-  row <span style="color:#f92672">%&gt;%</span> 
-    st_cast(<span style="color:#e6db74">&#39;POINT&#39;</span>) <span style="color:#f92672">%&gt;%</span>
-    st_transform(crs <span style="color:#f92672">=</span> <span style="color:#ae81ff">32119</span>) <span style="color:#f92672">%&gt;%</span>
-    st_distance(st_transform(coord, crs <span style="color:#f92672">=</span> <span style="color:#ae81ff">32119</span>)) <span style="color:#f92672">%&gt;%</span>
-    <span style="color:#66d9ef">min</span>()
+<span style="color:#09f;font-style:italic"># function to calculate the closet point of each census tract</span>
+find_distance <span style="color:#555">&lt;-</span> <span style="color:#069;font-weight:bold">function</span>(<span style="color:#069">row</span>, coord){
+  row <span style="color:#555">%&gt;%</span> 
+    st_cast(<span style="color:#c30">&#39;POINT&#39;</span>) <span style="color:#555">%&gt;%</span>
+    st_transform(crs <span style="color:#555">=</span> <span style="color:#f60">32119</span>) <span style="color:#555">%&gt;%</span>
+    st_distance(st_transform(coord, crs <span style="color:#555">=</span> <span style="color:#f60">32119</span>)) <span style="color:#555">%&gt;%</span>
+    <span style="color:#069">min</span>()
 }
 
-kc_sub <span style="color:#f92672">&lt;-</span> kc <span style="color:#f92672">%&gt;%</span> 
-  by_row(<span style="color:#ae81ff">.</span>collate <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;cols&#34;</span>, <span style="color:#66d9ef">function</span>(<span style="color:#66d9ef">row</span>){
-    row <span style="color:#f92672">%&gt;%</span> 
-      st_cast(<span style="color:#e6db74">&#39;POINT&#39;</span>) <span style="color:#f92672">%&gt;%</span>
-      st_transform(crs <span style="color:#f92672">=</span> <span style="color:#ae81ff">32119</span>) <span style="color:#f92672">%&gt;%</span>
-      st_distance(st_transform(kc_center, crs <span style="color:#f92672">=</span> <span style="color:#ae81ff">32119</span>)) <span style="color:#f92672">%&gt;%</span>
-      <span style="color:#66d9ef">min</span>() <span style="color:#f92672">%&gt;%</span> 
-      <span style="color:#66d9ef">unlist</span>() 
+kc_sub <span style="color:#555">&lt;-</span> kc <span style="color:#555">%&gt;%</span> 
+  by_row(<span style="color:#f60">.</span>collate <span style="color:#555">=</span> <span style="color:#c30">&#34;cols&#34;</span>, <span style="color:#069;font-weight:bold">function</span>(<span style="color:#069">row</span>){
+    row <span style="color:#555">%&gt;%</span> 
+      st_cast(<span style="color:#c30">&#39;POINT&#39;</span>) <span style="color:#555">%&gt;%</span>
+      st_transform(crs <span style="color:#555">=</span> <span style="color:#f60">32119</span>) <span style="color:#555">%&gt;%</span>
+      st_distance(st_transform(kc_center, crs <span style="color:#555">=</span> <span style="color:#f60">32119</span>)) <span style="color:#555">%&gt;%</span>
+      <span style="color:#069">min</span>() <span style="color:#555">%&gt;%</span> 
+      <span style="color:#069">unlist</span>() 
   })
 
-<span style="color:#75715e"># subset and plot</span>
-kc_sub <span style="color:#f92672">%&gt;%</span> 
-  filter(<span style="color:#ae81ff">.</span>out <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">40000</span>) <span style="color:#f92672">%&gt;%</span>
-  ggplot(aes(fill <span style="color:#f92672">=</span> aa)) <span style="color:#f92672">+</span> 
-  geom_sf( colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#ffffff&#39;</span>, size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.1</span>) <span style="color:#f92672">+</span> 
-  scale_fill_viridis(option <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;inferno&#34;</span>, direction <span style="color:#f92672">=</span> <span style="color:#ae81ff">-1</span>) <span style="color:#f92672">+</span>
-  labs(title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Kansas City&#39;s Black American Population&#34;</span>,
-       subtitle <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Proportion by Census Tract&#34;</span> ,
-       caption <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Data: 2015 American Community Survey&#39;</span>)</code></pre></div>
+<span style="color:#09f;font-style:italic"># subset and plot</span>
+kc_sub <span style="color:#555">%&gt;%</span> 
+  filter(<span style="color:#f60">.</span>out <span style="color:#555">&lt;=</span> <span style="color:#f60">40000</span>) <span style="color:#555">%&gt;%</span>
+  ggplot(aes(fill <span style="color:#555">=</span> aa)) <span style="color:#555">+</span> 
+  geom_sf( colour <span style="color:#555">=</span> <span style="color:#c30">&#39;#ffffff&#39;</span>, size <span style="color:#555">=</span> <span style="color:#f60">0.1</span>) <span style="color:#555">+</span> 
+  scale_fill_viridis(option <span style="color:#555">=</span> <span style="color:#c30">&#34;inferno&#34;</span>, direction <span style="color:#555">=</span> <span style="color:#f60">-1</span>) <span style="color:#555">+</span>
+  labs(title <span style="color:#555">=</span> <span style="color:#c30">&#34;Kansas City&#39;s Black American Population&#34;</span>,
+       subtitle <span style="color:#555">=</span> <span style="color:#c30">&#34;Proportion by Census Tract&#34;</span> ,
+       caption <span style="color:#555">=</span> <span style="color:#c30">&#39;Data: 2015 American Community Survey&#39;</span>)</code></pre></div>
 <p><img src="https://jcbain.github.io/img/post2/kc_40_original.png" alt="KC 40km" /></p>
 
 <p>This worked but there was something that didn&rsquo;t sit well with me about all of this code. It was too much for something that had to be a lot more common. So for the second time in two days I found myself checking the interwebs for those who have surely done this task.</p>
@@ -242,79 +242,79 @@ kc_sub <span style="color:#f92672">%&gt;%</span>
 <h4 id="attempt-2-lessons-in-humility">Attempt 2: <em>Lessons in Humility</em></h4>
 
 <p>This method requires me to transform the default Coordinate Reference System (CRS) for the <code>kc</code> data frame but after you get through that, the following functions are rather intuitive. It requires you specifying the point coordinates of the center of the city, similar to the first solution, but then creating a buffer of <em>x</em> distance around this point. From there it is as simple as finding the intersection of this buffer and the <code>kc</code> data frame and then subsetting the data based off of this intersection.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># convert crs </span>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#09f;font-style:italic"># convert crs </span>
 
-kc_sf <span style="color:#f92672">&lt;-</span> st_sf(kc)
-new_proj <span style="color:#f92672">&lt;-</span> <span style="color:#e6db74">&#34;+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs&#34;</span>
-kc_sf <span style="color:#f92672">&lt;-</span> st_transform(kc_sf, st_crs(new_proj))
+kc_sf <span style="color:#555">&lt;-</span> st_sf(kc)
+new_proj <span style="color:#555">&lt;-</span> <span style="color:#c30">&#34;+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs&#34;</span>
+kc_sf <span style="color:#555">&lt;-</span> st_transform(kc_sf, st_crs(new_proj))
 
-<span style="color:#75715e"># create buffer of 40 km</span>
-kc_ctr_sfc <span style="color:#f92672">&lt;-</span> st_sfc(st_point(<span style="color:#66d9ef">c</span>(<span style="color:#ae81ff">-94.5786</span> ,  <span style="color:#ae81ff">39.0997</span>)), crs <span style="color:#f92672">=</span> <span style="color:#ae81ff">4326</span>)
-kc_ctr_aea_sf <span style="color:#f92672">&lt;-</span> st_transform(kc_ctr_sfc, st_crs(kc_sf))
-kc_buf_sf <span style="color:#f92672">&lt;-</span> st_buffer(kc_ctr_aea_sf, <span style="color:#ae81ff">40000</span>)
+<span style="color:#09f;font-style:italic"># create buffer of 40 km</span>
+kc_ctr_sfc <span style="color:#555">&lt;-</span> st_sfc(st_point(<span style="color:#078;font-weight:bold">c</span>(<span style="color:#f60">-94.5786</span> ,  <span style="color:#f60">39.0997</span>)), crs <span style="color:#555">=</span> <span style="color:#f60">4326</span>)
+kc_ctr_aea_sf <span style="color:#555">&lt;-</span> st_transform(kc_ctr_sfc, st_crs(kc_sf))
+kc_buf_sf <span style="color:#555">&lt;-</span> st_buffer(kc_ctr_aea_sf, <span style="color:#f60">40000</span>)
 
-<span style="color:#75715e"># find intersection and subset</span>
-kc_buf_intersects <span style="color:#f92672">&lt;-</span> st_intersects(kc_buf_sf, kc_sf)
-kc_sel_sf <span style="color:#f92672">&lt;-</span> kc_sf[<span style="color:#66d9ef">unlist</span>(kc_buf_intersects),]
+<span style="color:#09f;font-style:italic"># find intersection and subset</span>
+kc_buf_intersects <span style="color:#555">&lt;-</span> st_intersects(kc_buf_sf, kc_sf)
+kc_sel_sf <span style="color:#555">&lt;-</span> kc_sf[<span style="color:#069">unlist</span>(kc_buf_intersects),]
 
-<span style="color:#75715e"># plot</span>
-kc_sel_sf <span style="color:#f92672">%&gt;%</span>
-  st_transform( crs <span style="color:#f92672">=</span> <span style="color:#ae81ff">4326</span>) <span style="color:#f92672">%&gt;%</span>
-  ggplot()<span style="color:#f92672">+</span>
-  geom_sf(aes(fill <span style="color:#f92672">=</span> aa), colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#ffffff&#39;</span>, size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.1</span>) <span style="color:#f92672">+</span> 
-  scale_fill_viridis(option <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;inferno&#34;</span>, direction <span style="color:#f92672">=</span> <span style="color:#ae81ff">-1</span>) <span style="color:#f92672">+</span>
-  labs(title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Kansas City&#39;s Black American Population&#34;</span>,
-       subtitle <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Proportion by Census Tract&#34;</span> ,
-       caption <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Data: 2015 American Community Survey&#39;</span>)</code></pre></div>
+<span style="color:#09f;font-style:italic"># plot</span>
+kc_sel_sf <span style="color:#555">%&gt;%</span>
+  st_transform( crs <span style="color:#555">=</span> <span style="color:#f60">4326</span>) <span style="color:#555">%&gt;%</span>
+  ggplot()<span style="color:#555">+</span>
+  geom_sf(aes(fill <span style="color:#555">=</span> aa), colour <span style="color:#555">=</span> <span style="color:#c30">&#39;#ffffff&#39;</span>, size <span style="color:#555">=</span> <span style="color:#f60">0.1</span>) <span style="color:#555">+</span> 
+  scale_fill_viridis(option <span style="color:#555">=</span> <span style="color:#c30">&#34;inferno&#34;</span>, direction <span style="color:#555">=</span> <span style="color:#f60">-1</span>) <span style="color:#555">+</span>
+  labs(title <span style="color:#555">=</span> <span style="color:#c30">&#34;Kansas City&#39;s Black American Population&#34;</span>,
+       subtitle <span style="color:#555">=</span> <span style="color:#c30">&#34;Proportion by Census Tract&#34;</span> ,
+       caption <span style="color:#555">=</span> <span style="color:#c30">&#39;Data: 2015 American Community Survey&#39;</span>)</code></pre></div>
 <p>And this renders&hellip;</p>
 
 <p><img src="https://jcbain.github.io/img/post2/kc_40_remake.png" alt="KC 40km remake" /></p>
 
 <p>Okay, the good news is that my original solution and the second solution render the same map. That&rsquo;s a good sign that they are working. The other (neutral) news is that I want to zoom in a bit more. Let&rsquo;s say 20 kilometers from the city center. Since this task was becoming somewhat repetitive I thought a function could really help out&hellip;</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">subset_map <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">function</span>(df, long, lat, dist <span style="color:#f92672">=</span> <span style="color:#ae81ff">40000</span>){
-  <span style="color:#75715e"># Change CRS for buffer</span>
-  df_sf <span style="color:#f92672">=</span> sf<span style="color:#f92672">::</span>st_sf(df)
-  new_proj <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs&#34;</span>
-  df_sf <span style="color:#f92672">=</span> sf<span style="color:#f92672">::</span>st_transform(df_sf, sf<span style="color:#f92672">::</span>st_crs(new_proj))
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">subset_map <span style="color:#555">&lt;-</span> <span style="color:#069;font-weight:bold">function</span>(df, long, lat, dist <span style="color:#555">=</span> <span style="color:#f60">40000</span>){
+  <span style="color:#09f;font-style:italic"># Change CRS for buffer</span>
+  df_sf <span style="color:#555">=</span> sf<span style="color:#555">::</span>st_sf(df)
+  new_proj <span style="color:#555">=</span> <span style="color:#c30">&#34;+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs&#34;</span>
+  df_sf <span style="color:#555">=</span> sf<span style="color:#555">::</span>st_transform(df_sf, sf<span style="color:#555">::</span>st_crs(new_proj))
   
-  <span style="color:#75715e"># Prepare buffer around center point</span>
-  cntr_pnt <span style="color:#f92672">&lt;-</span> sf<span style="color:#f92672">::</span>st_sfc(sf<span style="color:#f92672">::</span>st_point(<span style="color:#66d9ef">c</span>(long ,  lat)), crs <span style="color:#f92672">=</span> <span style="color:#ae81ff">4326</span>)
-  cntr_aea_sf <span style="color:#f92672">&lt;-</span> sf<span style="color:#f92672">::</span>st_transform(cntr_pnt, sf<span style="color:#f92672">::</span>st_crs(df_sf))
-  buff <span style="color:#f92672">&lt;-</span> sf<span style="color:#f92672">::</span>st_buffer(cntr_aea_sf, dist)
+  <span style="color:#09f;font-style:italic"># Prepare buffer around center point</span>
+  cntr_pnt <span style="color:#555">&lt;-</span> sf<span style="color:#555">::</span>st_sfc(sf<span style="color:#555">::</span>st_point(<span style="color:#078;font-weight:bold">c</span>(long ,  lat)), crs <span style="color:#555">=</span> <span style="color:#f60">4326</span>)
+  cntr_aea_sf <span style="color:#555">&lt;-</span> sf<span style="color:#555">::</span>st_transform(cntr_pnt, sf<span style="color:#555">::</span>st_crs(df_sf))
+  buff <span style="color:#555">&lt;-</span> sf<span style="color:#555">::</span>st_buffer(cntr_aea_sf, dist)
   
-  <span style="color:#75715e"># Subset original data</span>
-  intersection <span style="color:#f92672">&lt;-</span> sf<span style="color:#f92672">::</span>st_intersects(buff, df_sf)
-  subset <span style="color:#f92672">&lt;-</span> df_sf[<span style="color:#66d9ef">unlist</span>(intersection),]
+  <span style="color:#09f;font-style:italic"># Subset original data</span>
+  intersection <span style="color:#555">&lt;-</span> sf<span style="color:#555">::</span>st_intersects(buff, df_sf)
+  subset <span style="color:#555">&lt;-</span> df_sf[<span style="color:#069">unlist</span>(intersection),]
   
-  <span style="color:#66d9ef">subset</span>
+  <span style="color:#069">subset</span>
   
 }</code></pre></div>
 <p>This made things a lot easier. Oh and just for the hell of it I&rsquo;m going to add a layer of highways, which can be found <a href="http://www.marc.org/Data-Economy/Maps-and-GIS/GIS-Data/GIS-Datasets">here</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">highways <span style="color:#f92672">&lt;-</span> st_read(<span style="color:#e6db74">&#39;~/Downloads/highway_system/highway_system.shp&#39;</span>)
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">highways <span style="color:#555">&lt;-</span> st_read(<span style="color:#c30">&#39;~/Downloads/highway_system/highway_system.shp&#39;</span>)
 
-subset_map(kc_sub, <span style="color:#ae81ff">-94.5786</span>, <span style="color:#ae81ff">39.0997</span>, dist <span style="color:#f92672">=</span> <span style="color:#ae81ff">20000</span>) <span style="color:#f92672">%&gt;%</span>
-  ggplot()<span style="color:#f92672">+</span>
-  geom_sf(aes(fill <span style="color:#f92672">=</span> aa), colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#ffffff&#39;</span>, size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.1</span>) <span style="color:#f92672">+</span> 
-  geom_sf(data <span style="color:#f92672">=</span> highways, color <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#d1d0cf&#39;</span>) <span style="color:#f92672">+</span>
-  theme_mapper()<span style="color:#f92672">+</span>
-  scale_fill_viridis(option <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;inferno&#34;</span>, direction <span style="color:#f92672">=</span> <span style="color:#ae81ff">-1</span>) <span style="color:#f92672">+</span>
-  labs(title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Kansas City&#39;s Black American Population&#34;</span>,
-       subtitle <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Proportion by Census Tract&#34;</span> ,
-       caption <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Data: 2015 American Community Survey&#39;</span>)</code></pre></div>
+subset_map(kc_sub, <span style="color:#f60">-94.5786</span>, <span style="color:#f60">39.0997</span>, dist <span style="color:#555">=</span> <span style="color:#f60">20000</span>) <span style="color:#555">%&gt;%</span>
+  ggplot()<span style="color:#555">+</span>
+  geom_sf(aes(fill <span style="color:#555">=</span> aa), colour <span style="color:#555">=</span> <span style="color:#c30">&#39;#ffffff&#39;</span>, size <span style="color:#555">=</span> <span style="color:#f60">0.1</span>) <span style="color:#555">+</span> 
+  geom_sf(data <span style="color:#555">=</span> highways, color <span style="color:#555">=</span> <span style="color:#c30">&#39;#d1d0cf&#39;</span>) <span style="color:#555">+</span>
+  theme_mapper()<span style="color:#555">+</span>
+  scale_fill_viridis(option <span style="color:#555">=</span> <span style="color:#c30">&#34;inferno&#34;</span>, direction <span style="color:#555">=</span> <span style="color:#f60">-1</span>) <span style="color:#555">+</span>
+  labs(title <span style="color:#555">=</span> <span style="color:#c30">&#34;Kansas City&#39;s Black American Population&#34;</span>,
+       subtitle <span style="color:#555">=</span> <span style="color:#c30">&#34;Proportion by Census Tract&#34;</span> ,
+       caption <span style="color:#555">=</span> <span style="color:#c30">&#39;Data: 2015 American Community Survey&#39;</span>)</code></pre></div>
 <p><img src="https://jcbain.github.io/img/post2/kc_20_full_hwy.png" alt="KC 40km remake" /></p>
 
 <p>Whoops! The highways layer would look better if it were also subset.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">highway_sub <span style="color:#f92672">&lt;-</span> subset_map(highways, <span style="color:#ae81ff">-94.5786</span>, <span style="color:#ae81ff">39.0997</span>, dist <span style="color:#f92672">=</span> <span style="color:#ae81ff">20000</span>)
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">highway_sub <span style="color:#555">&lt;-</span> subset_map(highways, <span style="color:#f60">-94.5786</span>, <span style="color:#f60">39.0997</span>, dist <span style="color:#555">=</span> <span style="color:#f60">20000</span>)
 
-subset_map(kc_sub, <span style="color:#ae81ff">-94.5786</span>, <span style="color:#ae81ff">39.0997</span>, dist <span style="color:#f92672">=</span> <span style="color:#ae81ff">20000</span>) <span style="color:#f92672">%&gt;%</span>
-  ggplot()<span style="color:#f92672">+</span>
-  geom_sf(aes(fill <span style="color:#f92672">=</span> aa), colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#ffffff&#39;</span>, size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.1</span>) <span style="color:#f92672">+</span> 
-  geom_sf(data <span style="color:#f92672">=</span> highway_sub, color <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#d1d0cf&#39;</span>) <span style="color:#f92672">+</span>
-  theme_mapper()<span style="color:#f92672">+</span>
-  scale_fill_viridis(option <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;inferno&#34;</span>, direction <span style="color:#f92672">=</span> <span style="color:#ae81ff">-1</span>) <span style="color:#f92672">+</span>
-  labs(title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Kansas City&#39;s Black American Population&#34;</span>,
-       subtitle <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Proportion by Census Tract&#34;</span> ,
-       caption <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Data: 2015 American Community Survey&#39;</span>)</code></pre></div>
+subset_map(kc_sub, <span style="color:#f60">-94.5786</span>, <span style="color:#f60">39.0997</span>, dist <span style="color:#555">=</span> <span style="color:#f60">20000</span>) <span style="color:#555">%&gt;%</span>
+  ggplot()<span style="color:#555">+</span>
+  geom_sf(aes(fill <span style="color:#555">=</span> aa), colour <span style="color:#555">=</span> <span style="color:#c30">&#39;#ffffff&#39;</span>, size <span style="color:#555">=</span> <span style="color:#f60">0.1</span>) <span style="color:#555">+</span> 
+  geom_sf(data <span style="color:#555">=</span> highway_sub, color <span style="color:#555">=</span> <span style="color:#c30">&#39;#d1d0cf&#39;</span>) <span style="color:#555">+</span>
+  theme_mapper()<span style="color:#555">+</span>
+  scale_fill_viridis(option <span style="color:#555">=</span> <span style="color:#c30">&#34;inferno&#34;</span>, direction <span style="color:#555">=</span> <span style="color:#f60">-1</span>) <span style="color:#555">+</span>
+  labs(title <span style="color:#555">=</span> <span style="color:#c30">&#34;Kansas City&#39;s Black American Population&#34;</span>,
+       subtitle <span style="color:#555">=</span> <span style="color:#c30">&#34;Proportion by Census Tract&#34;</span> ,
+       caption <span style="color:#555">=</span> <span style="color:#c30">&#39;Data: 2015 American Community Survey&#39;</span>)</code></pre></div>
 <p><img src="https://jcbain.github.io/img/post2/kc_20_full_sub.png" alt="KC 40km remake" /></p>
 
 <p>And there we have it! And once again&hellip;</p>
