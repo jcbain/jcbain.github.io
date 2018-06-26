@@ -6,10 +6,20 @@
     <description>Recent content in Blogs on James Bain</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 Jun 2018 23:30:12 -0500</lastBuildDate>
+    <lastBuildDate>Mon, 25 Jun 2018 22:51:22 -0500</lastBuildDate>
     
 	<atom:link href="https://jcbain.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Coin Flip Probability with Go</title>
+      <link>https://jcbain.github.io/blog/coin-flip-probs-go/</link>
+      <pubDate>Mon, 25 Jun 2018 22:51:22 -0500</pubDate>
+      
+      <guid>https://jcbain.github.io/blog/coin-flip-probs-go/</guid>
+      <description>I decided to return to this problem of average probability of getting two heads flipped in a row versus a heads then a tails. I know, beat a dead horse much (💀🐴)? Hear me out&amp;hellip;
+Sadly, our 100 year old oak in the front yard is slowly dying, which means that for the majority of the day today, I didn&amp;rsquo;t have electricity&amp;hellip;and electricity causes internet, which means that I also didn&amp;rsquo;t have internet.</description>
+    </item>
     
     <item>
       <title>Coin Flip Probability with Python</title>

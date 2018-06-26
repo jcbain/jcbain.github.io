@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Computational Linguistics, Diversity, Anthropology">
+
+<base href="https://jcbain.github.io/">
+<title>
+
+
+     Coin Flip Probability with Go 
+
+</title>
+<link rel="canonical" href="https://jcbain.github.io/blog/coin-flip-probs-go/">
+
+
+
+
+
+
+<script
+src="https://code.jquery.com/jquery-3.2.1.min.js"
+integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans">
+
+
+
+    <link rel="stylesheet" href="css/light-style.css">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="img/fav.ico"
+
+>
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="section" id="top">
+
+    <div class="container hero  fade-in one ">
+    <h1 class="bold-title is-1">Gradient Dissents</h1>
+    </div>
+
+
+<div class="section  fade-in two ">
+
+    <div class="container">
+    <hr>
+<nav class="nav nav-center">
+    <span id="nav-toggle" class="nav-toggle"  onclick="document.getElementById('nav-menu').classList.toggle('is-active');">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+    <div id="nav-menu" class="nav-left nav-menu">
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/">Main</a>
+      </span>
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/#about">About</a> 
+      </span>
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/blog">Back to blog</a>
+      </span> 
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/#contact">Contact</a>
+      </span>
+    
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/index.xml"><i class="fa fa-rss"></i></a>
+      </span>
+    
+    </div>
+</nav>
+<hr>
+    </div>
+
+    <div class="container  fade-in two ">
+        <h2 class="title is-1 top-pad strong-post-title"><a href="https://jcbain.github.io/blog/coin-flip-probs-go/">Coin Flip Probability with Go</a></h2>
+            <div class="post-data">
+                Jun 25, 2018 |
+                4 minutes read
+            </div>
+
+            
+                <div class="blog-share">
+                Share this:
+                
+                <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Read%20Coin%20Flip%20Probability%20with%20Go%20https%3a%2f%2fjcbain.github.io%2fblog%2fcoin-flip-probs-go%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+                </a>
+                
+                 
+                
+                
+                </div>
+            
+
+    </div>
+
+    <div class="container markdown  fade-in two  top-pad">
+        <p>I decided to return to this problem of average probability of getting two heads flipped in a row versus a heads then a tails. I know, beat a dead horse much (💀🐴)? Hear me out&hellip;</p>
+
+<p>Sadly, our 100 year old oak in the front yard is slowly dying, which means that for the majority of the day today, I didn&rsquo;t have electricity&hellip;and electricity causes internet, which means that I also didn&rsquo;t have internet. I know, I could have gone to a coffee shop, campus, hacked into my neighbors&rsquo; &ldquo;toolshed&rdquo; network, but here&rsquo;s the thing, taking down an oak tree makes a lot of noise. I have 2 dogs and one we suspect had quite an abusive past and her and loud noises&hellip;well&hellip;let&rsquo;s just say she can&rsquo;t deal.</p>
+
+<p>In an effort to keep them comfortable, I stayed home. It was a good opportunity for me to take the offline tutorials to learn <code>go</code>. I&rsquo;ve been meaning to do so because it&rsquo;s fast and the logo is really cute.</p>
+
+<p><img src="https://jcbain.github.io/img/post5/go_logo.png" alt="Go Logo" /></p>
+
+<p>So I thought this would be a good learning experience. The tutorials are great but this problem is a good way to start thinking about the language. If you need a refresher of what I am talking about, <a href="https://jcbain.github.io/blog/coin-flip-probs/">here&rsquo;s</a> my post about it in <code>python</code>.</p>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">I needed a distraction from my dissertation so I took inspiration from this <a href="https://twitter.com/drob?ref_src=twsrc%5Etfw">@drob</a> tweet and adapted it to python and then wrote a short blog post on it. Also extended it to take any pattern sequence! <a href="https://twitter.com/hashtag/pydata?src=hash&amp;ref_src=twsrc%5Etfw">#pydata</a> <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://twitter.com/hashtag/probability?src=hash&amp;ref_src=twsrc%5Etfw">#probability</a> <a href="https://t.co/QgZ3HLwm64">https://t.co/QgZ3HLwm64</a> <a href="https://t.co/VaLWtRwnhU">https://t.co/VaLWtRwnhU</a></p>&mdash; 🦕 James Bain 🦖 (@gymbrane) <a href="https://twitter.com/gymbrane/status/1008939111925809153?ref_src=twsrc%5Etfw">June 19, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>Keep in mind I am still learning here, so there&rsquo;s most certainly a more elegant solution but here we go&hellip;step by step.</p>
+
+<p>Step 1: Load in packages</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#069;font-weight:bold">package</span> main
+
+<span style="color:#069;font-weight:bold">import</span> (
+        <span style="color:#c30">&#34;fmt&#34;</span>
+        <span style="color:#c30">&#34;math/rand&#34;</span>
+        <span style="color:#c30">&#34;time&#34;</span>
+        <span style="color:#c30">&#34;reflect&#34;</span>
+)</code></pre></div>
+<p>I&rsquo;m going to say one thing here; I really like how it throws an error when I don&rsquo;t use a package that I load in.</p>
+
+<p>Step 2: Write a function to simulate a coin flip:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#09f;font-style:italic">// simulate flipping a fair coin
+</span><span style="color:#09f;font-style:italic"></span><span style="color:#069;font-weight:bold">func</span> FlipCoin() <span style="color:#078;font-weight:bold">string</span> {
+        rand.Seed(time.Now().UnixNano())
+
+        <span style="color:#069;font-weight:bold">if</span> flipint <span style="color:#555">:=</span> rand.Intn(<span style="color:#f60">2</span>); flipint <span style="color:#555">==</span> <span style="color:#f60">0</span> {
+               <span style="color:#069;font-weight:bold">return</span> <span style="color:#c30">&#34;tails&#34;</span>
+        }
+        <span style="color:#069;font-weight:bold">return</span> <span style="color:#c30">&#34;heads&#34;</span>
+}</code></pre></div>
+<p>The <code>rand</code> package provides some pretty convenient methods, however, they are deterministic by default and therefore setting the seed is important. I know, seed setting makes it deterministic too, which is why I followed the convention of passing the current nanosecond as the seed. <code>rand.Intn(2)</code> also returns either 0 or 1. Perfect!</p>
+
+<p>Step 3: Flip until condition is met.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#09f;font-style:italic">// flip until condition is met
+</span><span style="color:#09f;font-style:italic"></span><span style="color:#069;font-weight:bold">func</span> FlipCondition() <span style="color:#078;font-weight:bold">int</span> {
+        flips    <span style="color:#555">:=</span> [<span style="color:#f60">2</span>]<span style="color:#078;font-weight:bold">string</span>{FlipCoin(), FlipCoin()}
+        previous <span style="color:#555">:=</span> <span style="color:#f60">0</span>
+        current  <span style="color:#555">:=</span> <span style="color:#f60">1</span>
+        s        <span style="color:#555">:=</span> flips[previous: current<span style="color:#555">+</span><span style="color:#f60">1</span>]
+        cond     <span style="color:#555">:=</span> []<span style="color:#078;font-weight:bold">string</span>{<span style="color:#c30">&#34;heads&#34;</span>,<span style="color:#c30">&#34;tails&#34;</span>}
+        numflips <span style="color:#555">:=</span> <span style="color:#f60">2</span>
+
+        <span style="color:#069;font-weight:bold">for</span> !reflect.DeepEqual(s, cond) {
+                s[previous] = s[current]
+                s[current] = FlipCoin()
+                numflips <span style="color:#555">+=</span><span style="color:#f60">1</span>
+        }
+        <span style="color:#069;font-weight:bold">return</span> numflips
+}</code></pre></div>
+<p>In this function, it is currently set to stop whenever it finds heads and then tails.</p>
+
+<p>Step 4: Run many trials and return a slice.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#09f;font-style:italic">// run multiple trials
+</span><span style="color:#09f;font-style:italic"></span><span style="color:#069;font-weight:bold">func</span> FlippityFlip(numtrials <span style="color:#078;font-weight:bold">int</span>) []<span style="color:#078;font-weight:bold">int</span> {
+        vals <span style="color:#555">:=</span> <span style="color:#366">make</span>([]<span style="color:#078;font-weight:bold">int</span>, numtrials)
+        <span style="color:#069;font-weight:bold">for</span> i <span style="color:#555">:=</span> <span style="color:#f60">0</span>; i &lt; numtrials; i<span style="color:#555">++</span> {
+                vals[i] = FlipCondition()
+        }
+        <span style="color:#069;font-weight:bold">return</span> vals
+}</code></pre></div>
+<p>This simply runs <code>FlipCondition()</code> <code>numtrials</code> times and saves it in a slice.</p>
+
+<p>Step 5: Implement a function to find the mean.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#09f;font-style:italic">// mean function
+</span><span style="color:#09f;font-style:italic"></span><span style="color:#069;font-weight:bold">func</span> mean(vals[]<span style="color:#078;font-weight:bold">int</span>) <span style="color:#078;font-weight:bold">float64</span> {
+        tot <span style="color:#555">:=</span> <span style="color:#f60">0.0</span>
+        <span style="color:#069;font-weight:bold">for</span> _, v <span style="color:#555">:=</span> <span style="color:#069;font-weight:bold">range</span> vals{
+                tot <span style="color:#555">+=</span> <span style="color:#366">float64</span>(v)
+        }
+        <span style="color:#069;font-weight:bold">return</span> tot<span style="color:#555">/</span><span style="color:#366">float64</span>(<span style="color:#366">len</span>(vals))
+}</code></pre></div>
+<p>Step 6: Wrap it all together and find the average in the <code>main()</code> function.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#069;font-weight:bold">func</span> main() {
+        trials <span style="color:#555">:=</span> FlippityFlip(<span style="color:#f60">10000</span>)
+        fmt.Println(mean(trials))
+}</code></pre></div>
+<p>This runs it 10,000 times and then calculates the average. The final step is to make my way over to a terminal and run the <code>go run</code> command on this file to assess the output.</p>
+
+<p>For heads then tails:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">go run coinflip.go
+<span style="color:#f60">4</span>.0054</code></pre></div>
+<p>For heads then heads:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">go run coinflip.go
+<span style="color:#f60">5</span>.9916</code></pre></div>
+<p>It still works! You know, the great thing about this exercises is that I knew what to expect. This served as a sort of check on my code since, you know, I&rsquo;m new to all of this&hellip;</p>
+
+<p>Oh, if you want to take a look at the code it <a href="https://github.com/jcbain/coinflipgo">right here</a>.</p>
+
+    </div>
+
+    <div class="disqus">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "gradient-dissents" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+<div class="container has-text-centered top-pad">
+<hr>
+<a href="https://jcbain.github.io/blog/coin-flip-probs-go/#top"><i class="fa fa-arrow-up"></i></a>
+<hr>
+</div>
+
+<div class="section" id="footer">
+    <div class="container has-text-centered">
+        
+            Introduction theme for Hugo. Life by ☕️ &#43; 🐕
+        
+    </div>
+</div>
+
+</div>
+</div>
+
+
+<script>
+$('a[href^="https:\/\/jcbain.github.io\/blog\/coin-flip-probs-go\/#"]').click(function(e) {
+    e.preventDefault();
+    var target = this.hash;
+    $('html, body').animate({
+    scrollTop: $(target).offset().top
+    }, 500);
+    return false;
+})
+</script>
+
+</body>
