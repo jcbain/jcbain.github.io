@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://jcbain.github.io/blog/cuttlefish-intro/</loc>
+    <lastmod>2018-07-30T20:11:33-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jcbain.github.io/blog/coin-flip-probs-go/</loc>
     <lastmod>2018-06-25T22:51:22-05:00</lastmod>
   </url>
@@ -39,7 +44,7 @@
   
   <url>
     <loc>https://jcbain.github.io/blog/</loc>
-    <lastmod>2018-06-25T22:51:22-05:00</lastmod>
+    <lastmod>2018-07-30T20:11:33-05:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -50,7 +55,7 @@
   
   <url>
     <loc>https://jcbain.github.io/</loc>
-    <lastmod>2018-06-25T22:51:22-05:00</lastmod>
+    <lastmod>2018-07-30T20:11:33-05:00</lastmod>
     <priority>0</priority>
   </url>
   

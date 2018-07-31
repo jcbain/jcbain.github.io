@@ -6,10 +6,24 @@
     <description>Recent content on James Bain</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 25 Jun 2018 22:51:22 -0500</lastBuildDate>
+    <lastBuildDate>Mon, 30 Jul 2018 20:11:33 -0500</lastBuildDate>
     
 	<atom:link href="https://jcbain.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Introducing Cuttlefish</title>
+      <link>https://jcbain.github.io/blog/cuttlefish-intro/</link>
+      <pubDate>Mon, 30 Jul 2018 20:11:33 -0500</pubDate>
+      
+      <guid>https://jcbain.github.io/blog/cuttlefish-intro/</guid>
+      <description>I created something new. Actually, I am creating something new and I am proud to say that I finally got to name something after my favorite cephalopod, the humble cuttlefish. Don&amp;rsquo;t know what a cuttlefish is?
+here&amp;rsquo;s one
+via GIPHY
+&amp;hellip;and here&amp;rsquo;s another
+via GIPHY
+They&amp;rsquo;re basically chameleon squids but more chameleon than a chameleon and more squid than a squid and they obviously can do things with color that hummingbirds do with flight.</description>
+    </item>
     
     <item>
       <title>Coin Flip Probability with Go</title>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Computational Linguistics, Diversity, Anthropology">
+
+<base href="https://jcbain.github.io/">
+<title>
+
+
+     Introducing Cuttlefish 
+
+</title>
+<link rel="canonical" href="https://jcbain.github.io/blog/cuttlefish-intro/">
+
+
+
+
+
+
+<script
+src="https://code.jquery.com/jquery-3.2.1.min.js"
+integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans">
+
+
+
+    <link rel="stylesheet" href="css/light-style.css">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="img/fav.ico"
+
+>
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="section" id="top">
+
+    <div class="container hero  fade-in one ">
+    <h1 class="bold-title is-1">Gradient Dissents</h1>
+    </div>
+
+
+<div class="section  fade-in two ">
+
+    <div class="container">
+    <hr>
+<nav class="nav nav-center">
+    <span id="nav-toggle" class="nav-toggle"  onclick="document.getElementById('nav-menu').classList.toggle('is-active');">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+    <div id="nav-menu" class="nav-left nav-menu">
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/">Main</a>
+      </span>
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/#about">About</a> 
+      </span>
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/blog">Back to blog</a>
+      </span> 
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/#contact">Contact</a>
+      </span>
+    
+      <span class="nav-item">
+        <a href="https://jcbain.github.io/index.xml"><i class="fa fa-rss"></i></a>
+      </span>
+    
+    </div>
+</nav>
+<hr>
+    </div>
+
+    <div class="container  fade-in two ">
+        <h2 class="title is-1 top-pad strong-post-title"><a href="https://jcbain.github.io/blog/cuttlefish-intro/">Introducing Cuttlefish</a></h2>
+            <div class="post-data">
+                Jul 30, 2018 |
+                3 minutes read
+            </div>
+
+            
+                <div class="blog-share">
+                Share this:
+                
+                <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Read%20Introducing%20Cuttlefish%20https%3a%2f%2fjcbain.github.io%2fblog%2fcuttlefish-intro%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+                </a>
+                
+                 
+                
+                
+                </div>
+            
+
+    </div>
+
+    <div class="container markdown  fade-in two  top-pad">
+        <p>I created something new. Actually, I <u>am creating</u> something new and I am proud to say that I finally got to name something after my favorite cephalopod, the humble cuttlefish. Don&rsquo;t know what a cuttlefish is?</p>
+
+<p><em>here&rsquo;s one</em></p>
+
+<p><iframe src="https://giphy.com/embed/FmT1crQG1skOA" width="480" height="365" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/sea-FmT1crQG1skOA">via GIPHY</a></p></p>
+
+<p><em>&hellip;and here&rsquo;s another</em></p>
+
+<p><iframe src="https://giphy.com/embed/Z1h7gtXSQRyTe" width="480" height="301" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/cuttlefish-Z1h7gtXSQRyTe">via GIPHY</a></p></p>
+
+<p>They&rsquo;re basically chameleon squids but more chameleon than a chameleon and more squid than a squid and they obviously can do things with color that hummingbirds do with flight.</p>
+
+<table>
+<iframe src="https://giphy.com/embed/SiwDjmf6slkYg" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/SiwDjmf6slkYg">via GIPHY</a></p>
+<caption align="left"><em>f-16s of nature</em></caption>
+</table>
+
+<p><code>cuttlefish</code> (you can find the repo <a href="https://github.com/jcbain/cuttlefish">here</a>) is a package in which you can take your favorite images and extract the colors from them to form a color palette. Right now there is one main function that you would use to do this with two different methods of color extraction, which is what the remainder of this post is about. <em>I know, you were hoping for more animal gifs.</em></p>
+
+<p>Imagine we have the following image.</p>
+
+<p><img src="https://jcbain.github.io/img/post6/chinese_latterns.png" alt="Chinese Latterns" /></p>
+
+<p>The print is Chinese and the artist is unknown. You can read up more about the piece <a href="http://blogs.bl.uk/asian-and-african/2014/05/british-library-releases-over-200-japanese-and-chinese-prints-into-public-domain.html">here</a>. The colors are simply perfect for demonstrations purposes.</p>
+
+<p>We start this out like we start out most&hellip;install the package.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-splus" data-lang="splus">devtools<span style="color:#555">::</span>install_github(<span style="color:#c30">&#34;jcbain/cuttlefish&#34;</span>)</code></pre></div>
+<p>Next, we load it up.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-splus" data-lang="splus"><span style="color:#069;font-weight:bold">library</span>(cuttlefish)</code></pre></div>
+<p>Then you simply call the <code>create_palette()</code> function with a path to the image and the number of colors you want to extract.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-splus" data-lang="splus">cols <span style="color:#555">&lt;-</span> create_palette(<span style="color:#c30">&#34;chinese_latterns.png&#34;</span>, n<span style="color:#555">=</span><span style="color:#f60">5</span>)
+
+<span style="color:#09f;font-style:italic"># scales to display the palette</span>
+scales<span style="color:#555">::</span>show_col(cols)</code></pre></div>
+<p><img src="https://jcbain.github.io/img/post6/palette_1.png" alt="Palette 1" /></p>
+
+<p>Note, if you are following along, you might realize that the color palette you were given is different than the color palette that I&rsquo;m displaying here. That is because <code>cuttlefish</code>&rsquo;s <code>find_segments</code> function randomly picks a color from all of the unique colors in the image as a starting point. These colors are represented in the HSV (hue saturation value) color space because the color hues are projected onto an angular dimension from 0˚ to 360˚. This is important because I wanted to maximize the distance between segments to avoid overlap in colors when segmenting the color palette. In other words, I wanted colors to be 360˚/n away from one another. Now, you may be asking, &ldquo;What if there isn&rsquo;t a color that is 360˚/n away from color <em>i</em>?&rdquo; Well, I simply take the closest color to that distance away from color <em>i</em>. Now you could be thinking, &ldquo;What if multiple colors are equidistant?&rdquo; Simple, since all colors are unique from the possible selection, you can either take the farthest in terms of saturation and value of the subset of close colors or the closest by specifying <code>max.distance</code> parameter. <code>TRUE</code> will return the most distant by saturation and value and <code>FALSE</code> will return the nearest.  This was a design decision and some might want colors of a more similar saturation. For example, you could do</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-splus" data-lang="splus">cols <span style="color:#555">&lt;-</span> create_palette(<span style="color:#c30">&#34;chinese_latterns.png&#34;</span>, <span style="color:#f60">5</span>, max.distance <span style="color:#555">=</span> <span style="color:#069;font-weight:bold">FALSE</span>)</code></pre></div>
+<p>Now, occasionally images won&rsquo;t contain a distribution of a lot of colors (although the image probably has a bunch of unique colors). This is often the case with logos. For this, using the default segmentation above might not provide what is wanted. Instead, I&rsquo;ve built an option to find the most prominent colors in the image by simply specifying <code>prominent.ord=TRUE</code> in the <code>create_palette</code> function. Take the NPR logo for instance.</p>
+
+<p><img src="https://jcbain.github.io/img/post6/npr_logo.png" alt="NPR" /></p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-splus" data-lang="splus">cols <span style="color:#555">&lt;-</span> create_palette(<span style="color:#c30">&#34;npr_logo.png&#34;</span>, n <span style="color:#555">=</span> <span style="color:#f60">4</span>, prominent.ord <span style="color:#555">=</span> <span style="color:#069;font-weight:bold">TRUE</span>)
+
+scales<span style="color:#555">::</span>show_col(cols)</code></pre></div>
+<p>Would provide&hellip;</p>
+
+<p><img src="https://jcbain.github.io/img/post6/palette_2.png" alt="Palette 2" /></p>
+
+<p>I know that there isn&rsquo;t a whole lot of functionality quite yet but I will be building it up over the months to come. There is one final bit though before closing up this post. Like any respectable and non-respectable <code>R</code> package, <code>cuttlefish</code> needed a hex sticker so a hex sticker I created&hellip;</p>
+
+<p><img src="https://jcbain.github.io/img/post6/cuttlefish2.png" alt="hex" /></p>
+
+    </div>
+
+    <div class="disqus">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "gradient-dissents" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+<div class="container has-text-centered top-pad">
+<hr>
+<a href="https://jcbain.github.io/blog/cuttlefish-intro/#top"><i class="fa fa-arrow-up"></i></a>
+<hr>
+</div>
+
+<div class="section" id="footer">
+    <div class="container has-text-centered">
+        
+            Introduction theme for Hugo. Life by ☕️ &#43; 🐕
+        
+    </div>
+</div>
+
+</div>
+</div>
+
+
+<script>
+$('a[href^="https:\/\/jcbain.github.io\/blog\/cuttlefish-intro\/#"]').click(function(e) {
+    e.preventDefault();
+    var target = this.hash;
+    $('html, body').animate({
+    scrollTop: $(target).offset().top
+    }, 500);
+    return false;
+})
+</script>
+
+</body>
