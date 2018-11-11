@@ -150,16 +150,16 @@ crossorigin="anonymous"></script>
 <p>The fourth line is important here as that is the data, which is provided by the <code>nltk</code> library. It contains all of the Presidential inaugural speeches from Washington to Obama&rsquo;s first term. It also comes with convenient methods for tokenizing and lemmatization.</p>
 
 <p>We can take a look at Obama&rsquo;s before wrapping all of these steps into one function.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">obama <span style="color:#555">=</span> inaugural<span style="color:#555">.</span>words(<span style="color:#c30"></span><span style="color:#c30">&#39;2009-Obama.txt&#39;</span>)
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">obama <span style="color:#555">=</span> inaugural<span style="color:#555">.</span>words(<span style="color:#c30">&#39;2009-Obama.txt&#39;</span>)
 <span style="color:#069;font-weight:bold">print</span>(obama[<span style="color:#f60">0</span>:<span style="color:#f60">9</span>])
 
-<span style="color:#555">&gt;</span> [<span style="color:#c30"></span><span style="color:#c30">&#39;My&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;fellow&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;citizens&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;:&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;I&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;stand&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;here&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;today&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;humbled&#39;</span>]</code></pre></div>
+<span style="color:#555">&gt;</span> [<span style="color:#c30">&#39;My&#39;</span>, <span style="color:#c30">&#39;fellow&#39;</span>, <span style="color:#c30">&#39;citizens&#39;</span>, <span style="color:#c30">&#39;:&#39;</span>, <span style="color:#c30">&#39;I&#39;</span>, <span style="color:#c30">&#39;stand&#39;</span>, <span style="color:#c30">&#39;here&#39;</span>, <span style="color:#c30">&#39;today&#39;</span>, <span style="color:#c30">&#39;humbled&#39;</span>]</code></pre></div>
 <p>Thank god for the <code>.words()</code> method here as it tokenizes the speech for us (although writing a tokenizer isn&rsquo;t too difficult 😉). Tokenization is the process of splitting words up into discrete units instead of storing them as a phrase or document. Here we can see that the tokens are the list of words of President Obama&rsquo;s speech.</p>
 
 <p>Next I&rsquo;m going to remove stopwords (common words) and special characters. Then I will lematize each word so that I am getting each word&rsquo;s root word. For example, &ldquo;ran&rdquo; and &ldquo;run&rdquo; are the same word but in different tenses. It&rsquo;s not really that neat if a President (or their speech writer) just uses different grammatical variations of the same word, is it? These tasks are rather simple, just some basic list manipulation.</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">lemmatizer <span style="color:#555">=</span> WordNetLemmatizer()
 
-obama_cleaned <span style="color:#555">=</span> [word<span style="color:#555">.</span>lower() <span style="color:#069;font-weight:bold">for</span> word <span style="color:#000;font-weight:bold">in</span> obama <span style="color:#069;font-weight:bold">if</span> word <span style="color:#000;font-weight:bold">not</span> <span style="color:#000;font-weight:bold">in</span> stopwords<span style="color:#555">.</span>words(<span style="color:#c30"></span><span style="color:#c30">&#39;english&#39;</span>) <span style="color:#000;font-weight:bold">and</span> word<span style="color:#555">.</span>isalpha()]
+obama_cleaned <span style="color:#555">=</span> [word<span style="color:#555">.</span>lower() <span style="color:#069;font-weight:bold">for</span> word <span style="color:#000;font-weight:bold">in</span> obama <span style="color:#069;font-weight:bold">if</span> word <span style="color:#000;font-weight:bold">not</span> <span style="color:#000;font-weight:bold">in</span> stopwords<span style="color:#555">.</span>words(<span style="color:#c30">&#39;english&#39;</span>) <span style="color:#000;font-weight:bold">and</span> word<span style="color:#555">.</span>isalpha()]
 obama_cleaned <span style="color:#555">=</span> [lemmatizer<span style="color:#555">.</span>lemmatize(word) <span style="color:#069;font-weight:bold">for</span> word <span style="color:#000;font-weight:bold">in</span> obama_cleaned]</code></pre></div>
 <p>Next comes the 🥖 and 🧀 (shut up. they didn&rsquo;t have a butter emoji).</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">unique_words <span style="color:#555">=</span> []
@@ -182,7 +182,7 @@ inds <span style="color:#555">=</span> []
     corpus <span style="color:#555">=</span> inaugural<span style="color:#555">.</span>words(<span style="color:#366">file</span>)
     
     <span style="color:#09f;font-style:italic"># remove stopwords and special character and lemmatize words</span>
-    cleaned <span style="color:#555">=</span> [word<span style="color:#555">.</span>lower() <span style="color:#069;font-weight:bold">for</span> word <span style="color:#000;font-weight:bold">in</span> corpus <span style="color:#069;font-weight:bold">if</span> word <span style="color:#000;font-weight:bold">not</span> <span style="color:#000;font-weight:bold">in</span> stopwords<span style="color:#555">.</span>words(<span style="color:#c30"></span><span style="color:#c30">&#39;english&#39;</span>) <span style="color:#000;font-weight:bold">and</span> word<span style="color:#555">.</span>isalpha()]
+    cleaned <span style="color:#555">=</span> [word<span style="color:#555">.</span>lower() <span style="color:#069;font-weight:bold">for</span> word <span style="color:#000;font-weight:bold">in</span> corpus <span style="color:#069;font-weight:bold">if</span> word <span style="color:#000;font-weight:bold">not</span> <span style="color:#000;font-weight:bold">in</span> stopwords<span style="color:#555">.</span>words(<span style="color:#c30">&#39;english&#39;</span>) <span style="color:#000;font-weight:bold">and</span> word<span style="color:#555">.</span>isalpha()]
     cleaned <span style="color:#555">=</span> [lemmatizer<span style="color:#555">.</span>lemmatize(word) <span style="color:#069;font-weight:bold">for</span> word <span style="color:#000;font-weight:bold">in</span> cleaned]
     
     
@@ -212,19 +212,19 @@ inds <span style="color:#555">=</span> []
     rows <span style="color:#555">=</span> <span style="color:#366">zip</span>(<span style="color:#555">*</span>[inds, word_len, vocab_size, year, president])
     
     <span style="color:#09f;font-style:italic"># write output</span>
-    write_path <span style="color:#555">=</span> os<span style="color:#555">.</span>getcwd() <span style="color:#555">+</span> <span style="color:#c30"></span><span style="color:#c30">&#39;/&#39;</span> <span style="color:#555">+</span> <span style="color:#c30"></span><span style="color:#c30">&#39;output&#39;</span>
-    output_file <span style="color:#555">=</span> <span style="color:#c30"></span><span style="color:#c30">&#39;{}/{}{}.csv&#39;</span><span style="color:#555">.</span>format(write_path, meta_match<span style="color:#555">.</span>group(<span style="color:#f60">1</span>), meta_match<span style="color:#555">.</span>group(<span style="color:#f60">2</span>))
+    write_path <span style="color:#555">=</span> os<span style="color:#555">.</span>getcwd() <span style="color:#555">+</span> <span style="color:#c30">&#39;/&#39;</span> <span style="color:#555">+</span> <span style="color:#c30">&#39;output&#39;</span>
+    output_file <span style="color:#555">=</span> <span style="color:#c30">&#39;{}/{}{}.csv&#39;</span><span style="color:#555">.</span>format(write_path, meta_match<span style="color:#555">.</span>group(<span style="color:#f60">1</span>), meta_match<span style="color:#555">.</span>group(<span style="color:#f60">2</span>))
     
     <span style="color:#069;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">not</span> os<span style="color:#555">.</span>path<span style="color:#555">.</span>exists(write_path):
         os<span style="color:#555">.</span>mkdir(write_path)
         
     
-    <span style="color:#069;font-weight:bold">with</span> <span style="color:#366">open</span>(output_file, <span style="color:#c30"></span><span style="color:#c30">&#34;w&#34;</span>) <span style="color:#069;font-weight:bold">as</span> f:
+    <span style="color:#069;font-weight:bold">with</span> <span style="color:#366">open</span>(output_file, <span style="color:#c30">&#34;w&#34;</span>) <span style="color:#069;font-weight:bold">as</span> f:
         writer <span style="color:#555">=</span> csv<span style="color:#555">.</span>writer(f)
         <span style="color:#069;font-weight:bold">for</span> row <span style="color:#000;font-weight:bold">in</span> rows:
             writer<span style="color:#555">.</span>writerow(row)
             
-    <span style="color:#069;font-weight:bold">print</span>(<span style="color:#c30"></span><span style="color:#c30">&#39;file written to: {}&#39;</span><span style="color:#555">.</span>format(output_file))</code></pre></div>
+    <span style="color:#069;font-weight:bold">print</span>(<span style="color:#c30">&#39;file written to: {}&#39;</span><span style="color:#555">.</span>format(output_file))</code></pre></div>
 <p>Now we just iterate through all of the file ids and a collector&rsquo;s curve for each Presidential inaugural speech should be written.</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">for</span> <span style="color:#366">file</span> <span style="color:#000;font-weight:bold">in</span> inaugural<span style="color:#555">.</span>fileids():
     collect_curve_data(<span style="color:#366">file</span>)</code></pre></div>
@@ -280,7 +280,7 @@ ggplot() <span style="color:#555">+</span>
 
     <div class="disqus">
         <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

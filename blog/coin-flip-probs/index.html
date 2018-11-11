@@ -137,7 +137,7 @@ crossorigin="anonymous"></script>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">numpy</span> <span style="color:#069;font-weight:bold">as</span> <span style="color:#0cf;font-weight:bold">np</span>
 
 <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">flip_coin</span>():
-    <span style="color:#c30"></span><span style="color:#c30">&#34;&#34;&#34;Simulate flipping a coin.
+    <span style="color:#c30">&#34;&#34;&#34;Simulate flipping a coin.
 </span><span style="color:#c30">    
 </span><span style="color:#c30">    Returns
 </span><span style="color:#c30">    -------
@@ -146,13 +146,13 @@ crossorigin="anonymous"></script>
 </span><span style="color:#c30">    &#34;&#34;&#34;</span>
     flip <span style="color:#555">=</span> np<span style="color:#555">.</span>random<span style="color:#555">.</span>binomial(<span style="color:#f60">1</span>, <span style="color:#555">.</span><span style="color:#f60">5</span>, <span style="color:#f60">1</span>)
     <span style="color:#069;font-weight:bold">if</span> flip[<span style="color:#f60">0</span>] <span style="color:#555">==</span> <span style="color:#f60">1</span>:
-        side <span style="color:#555">=</span> <span style="color:#c30"></span><span style="color:#c30">&#34;H&#34;</span>
+        side <span style="color:#555">=</span> <span style="color:#c30">&#34;H&#34;</span>
     <span style="color:#069;font-weight:bold">else</span>:
-        side <span style="color:#555">=</span> <span style="color:#c30"></span><span style="color:#c30">&#34;T&#34;</span>
+        side <span style="color:#555">=</span> <span style="color:#c30">&#34;T&#34;</span>
     <span style="color:#069;font-weight:bold">return</span> side</code></pre></div>
 <p>Then I need a function to flip the coin multiple times and to stop only when a certain sequence of sides were met. In other words, stop when two heads were flipped in a row. From this, I want the number of times it took to achieve this sequence to be returned.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">flip_condition</span>(stop_condition<span style="color:#555">=</span>[<span style="color:#c30"></span><span style="color:#c30">&#39;H&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;T&#39;</span>], print_opt<span style="color:#555">=</span>False):
-    <span style="color:#c30"></span><span style="color:#c30">&#34;&#34;&#34;Flip coin until flip pattern is met.
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">flip_condition</span>(stop_condition<span style="color:#555">=</span>[<span style="color:#c30">&#39;H&#39;</span>, <span style="color:#c30">&#39;T&#39;</span>], print_opt<span style="color:#555">=</span>False):
+    <span style="color:#c30">&#34;&#34;&#34;Flip coin until flip pattern is met.
 </span><span style="color:#c30">    
 </span><span style="color:#c30">    Parameters
 </span><span style="color:#c30">    ----------
@@ -183,20 +183,20 @@ crossorigin="anonymous"></script>
         <span style="color:#069;font-weight:bold">print</span>(flip_list)
     <span style="color:#069;font-weight:bold">return</span> current_index </code></pre></div>
 <p>This also includes an option to print the sequence (in case you want to check my programming&hellip;I would 😜). And then I just run it many times and take the average for both conditions.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">mean_ht <span style="color:#555">=</span> np<span style="color:#555">.</span>mean([flip_condition([<span style="color:#c30"></span><span style="color:#c30">&#39;H&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;T&#39;</span>]) <span style="color:#069;font-weight:bold">for</span> i <span style="color:#000;font-weight:bold">in</span> <span style="color:#366">range</span>(<span style="color:#f60">10000</span>)])
-mean_hh <span style="color:#555">=</span> np<span style="color:#555">.</span>mean([flip_condition([<span style="color:#c30"></span><span style="color:#c30">&#39;H&#39;</span>,<span style="color:#c30"></span><span style="color:#c30">&#39;H&#39;</span>]) <span style="color:#069;font-weight:bold">for</span> i <span style="color:#000;font-weight:bold">in</span> <span style="color:#366">range</span>(<span style="color:#f60">10000</span>)])
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">mean_ht <span style="color:#555">=</span> np<span style="color:#555">.</span>mean([flip_condition([<span style="color:#c30">&#39;H&#39;</span>, <span style="color:#c30">&#39;T&#39;</span>]) <span style="color:#069;font-weight:bold">for</span> i <span style="color:#000;font-weight:bold">in</span> <span style="color:#366">range</span>(<span style="color:#f60">10000</span>)])
+mean_hh <span style="color:#555">=</span> np<span style="color:#555">.</span>mean([flip_condition([<span style="color:#c30">&#39;H&#39;</span>,<span style="color:#c30">&#39;H&#39;</span>]) <span style="color:#069;font-weight:bold">for</span> i <span style="color:#000;font-weight:bold">in</span> <span style="color:#366">range</span>(<span style="color:#f60">10000</span>)])
 
-<span style="color:#069;font-weight:bold">print</span>(<span style="color:#c30"></span><span style="color:#c30">&#34;Average # of flips to achieve heads and then heads again: {}&#34;</span><span style="color:#555">.</span>format(mean_hh))
-<span style="color:#069;font-weight:bold">print</span>(<span style="color:#c30"></span><span style="color:#c30">&#34;Average # of flips to achieve heads and then tails: {}&#34;</span><span style="color:#555">.</span>format(mean_ht))
+<span style="color:#069;font-weight:bold">print</span>(<span style="color:#c30">&#34;Average # of flips to achieve heads and then heads again: {}&#34;</span><span style="color:#555">.</span>format(mean_hh))
+<span style="color:#069;font-weight:bold">print</span>(<span style="color:#c30">&#34;Average # of flips to achieve heads and then tails: {}&#34;</span><span style="color:#555">.</span>format(mean_ht))
 
 <span style="color:#09f;font-style:italic"># Average # of flips to achieve heads and then heads again: 6.0081</span>
 <span style="color:#09f;font-style:italic"># Average # of flips to achieve heads and then tails: 3.9829</span></code></pre></div>
 <p>Looks like probability holds up in <code>Python</code>! Oh, but I also created the function to capture any pattern. How about heads, tails, heads?</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">np<span style="color:#555">.</span>mean([flip_condition([<span style="color:#c30"></span><span style="color:#c30">&#39;H&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;T&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;H&#39;</span>]) <span style="color:#069;font-weight:bold">for</span> i <span style="color:#000;font-weight:bold">in</span> <span style="color:#366">range</span>(<span style="color:#f60">10000</span>)])
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">np<span style="color:#555">.</span>mean([flip_condition([<span style="color:#c30">&#39;H&#39;</span>, <span style="color:#c30">&#39;T&#39;</span>, <span style="color:#c30">&#39;H&#39;</span>]) <span style="color:#069;font-weight:bold">for</span> i <span style="color:#000;font-weight:bold">in</span> <span style="color:#366">range</span>(<span style="color:#f60">10000</span>)])
 
 <span style="color:#09f;font-style:italic"># 9.9231</span></code></pre></div>
 <p>or heads, heads, heads</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">np<span style="color:#555">.</span>mean([flip_condition([<span style="color:#c30"></span><span style="color:#c30">&#39;H&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;H&#39;</span>, <span style="color:#c30"></span><span style="color:#c30">&#39;H&#39;</span>]) <span style="color:#069;font-weight:bold">for</span> i <span style="color:#000;font-weight:bold">in</span> <span style="color:#366">range</span>(<span style="color:#f60">10000</span>)])
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">np<span style="color:#555">.</span>mean([flip_condition([<span style="color:#c30">&#39;H&#39;</span>, <span style="color:#c30">&#39;H&#39;</span>, <span style="color:#c30">&#39;H&#39;</span>]) <span style="color:#069;font-weight:bold">for</span> i <span style="color:#000;font-weight:bold">in</span> <span style="color:#366">range</span>(<span style="color:#f60">10000</span>)])
 
 <span style="color:#09f;font-style:italic"># 14.1544</span></code></pre></div>
 <p>Well that was neat! 🦖🦕</p>
@@ -207,7 +207,7 @@ mean_hh <span style="color:#555">=</span> np<span style="color:#555">.</span>mea
 
     <div class="disqus">
         <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     
