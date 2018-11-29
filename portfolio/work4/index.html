@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Presidential Collector Curves</title>
+<meta name="description" content="Describe your website">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="all,follow">
+<meta name="googlebot" content="index,follow,snippet,archive">
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,300,700,400italic">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/owl.carousel.css">
+<link rel="stylesheet" href="/css/owl.theme.css">
+
+
+  <link href="/css/style.violet.css" rel="stylesheet" id="theme-stylesheet">
+
+ 
+
+  
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+
+<link href="/css/custom.css" rel="stylesheet">
+<link rel="shortcut icon" href="/img/favicon.png">
+
+
+</head>
+<body>
+  <div id="all">
+      <div class="container-fluid">
+          <div class="row row-offcanvas row-offcanvas-left">
+              <div id="sidebar" class="col-xs-6 col-sm-4 col-md-3 sidebar-offcanvas">
+  <div class="sidebar-content">
+    <h1 class="sidebar-heading"><a href="/">James Bain</a></h1>
+    
+      <p class="sidebar-p">I am a creative illustrator and graphic designer with more than 10 years of experience.</p>
+    
+      <p class="sidebar-p">Originally from Toronto, currently based in London.</p>
+    
+    <ul class="sidebar-menu">
+      
+        <li><a href="/portfolio/">Home</a></li>
+      
+        <li><a href="/about/">About</a></li>
+      
+        <li><a href="/contact/">Get in touch</a></li>
+      
+    </ul>
+    <p class="social">
+  
+  
+  
+  <a href="https://twitter.com/gymbrane" data-animate-hover="pulse" class="external twitter">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  <a href="mailto:jamescbain@gmail.com" data-animate-hover="pulse" class="email">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://linkedin.com/in/james-bain-971805123/" data-animate-hover="pulse" class="external">
+    <i class="fa fa-linkedin"></i>
+  </a>
+  
+  
+  <a href="https://stackoverflow.com/users/2969279/gymbrane?tab=profile" data-animate-hover="pulse" class="external">
+    <i class="fa fa-stack-overflow"></i>
+  </a>
+  
+  
+  <a href="https://github.com/jcbain/" data-animate-hover="pulse" class="external">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+</p>
+
+
+    <div class="copyright">
+      <p class="credit">
+        
+          &copy;2016 James Chester Bain
+        
+        | Template by <a href="https://bootstrapious.com/free-templates" class="external">Bootstrapious.com</a>
+
+&amp; ported to Hugo by <a href="https://github.com/kishaningithub">Kishan B</a>
+
+      </p>
+    </div>
+  </div>
+</div>
+
+              
+<div class="col-xs-12 col-sm-8 col-md-9 content-column white-background">
+  <div class="small-navbar visible-xs">
+  <button type="button" data-toggle="offcanvas" class="btn btn-ghost pull-left"> <i class="fa fa-align-left"> </i>Menu</button>
+  <h1 class="small-navbar-heading"><a href="/">James Bain</a></h1>
+</div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="content-column-content">
+         <h1>Presidential Collector Curves</h1>
+         
+
+<p>Confession 1: I&rsquo;m less of a person this week. I had my appendix removed on Tuesday. It was my first surgical experience where I was anesthetized, which scared the hell out of me. Turns out that the doctor tells you to take some breaths and the next thing you know you are being woken up by a man named Nate who should really be more interested in your inebriated, albeit transcendental, commentary. 10 for 10 in terms of experiences you weren&rsquo;t expecting in a week.</p>
+
+<p>Confession 2: I&rsquo;ve peddled myself as an <code>R</code> user, which I am, and <code>R</code> will always be my first programming language. It was my gateway to my computational and data science career, but I&rsquo;m also a <code>python</code> user. I know, you can use both, and I frequently do, but I may program a tiny bit more in <code>python</code> than I do in <code>R</code>. Probably because of <code>pandas</code>, <code>numpy</code> and more recently <code>tensorflow</code>. But this post isn&rsquo;t one of those stupid, click-baity, <code>python</code> vs. <code>R</code> rants; instead, it is about a common workflow of mine in which I use both together.</p>
+
+<h2 id="collector-s-curve-a-different-measure-of-diversity">Collector&rsquo;s Curve: A Different Measure of Diversity</h2>
+
+<p>Measuring diversity is one of the most fascinating parts of my research. This has been a principal theme in both of my previous posts (<a href="https://jcbain.github.io/blog/diversity-with-tidycensus/">1</a>, <a href="https://jcbain.github.iob/log/geographic-subsets/">2</a>). A collector&rsquo;s curve is a bit different than some of the other measures I have used before. The idea here is to count the unique number of items given a certain sample then increase the sample and count again. This makes the count a function of the sample size. This measure is sometimes used to measure biodiversity. I am not doing that here.</p>
+
+<h2 id="presidential-inaugural-speeches">Presidential Inaugural Speeches</h2>
+
+<p>I thought it would be interesting to apply this concept to the number of unique words of each of the Presidents&rsquo; (of the United States) inaugural speeches as the speeches progress. In other words, I was interested at looking at the rate of unique word usage as the speech progressed and compare these across Presidential terms.</p>
+
+<h3 id="an-example">An Example</h3>
+
+<p>Data preparation is done in <code>python</code> so first we read in a handful of packages that will aid in this task.</p>
+
+<pre><code class="language-python">import re # for regular expressions
+import os # for operating system operations
+import csv # for writing files
+
+from nltk.corpus import inaugural
+from nltk.corpus import stopwords
+from nltk.stem.wordnet import WordNetLemmatizer
+</code></pre>
+
+<p>The fourth line is important here as that is the data, which is provided by the <code>nltk</code> library. It contains all of the Presidential inaugural speeches from Washington to Obama&rsquo;s first term. It also comes with convenient methods for tokenizing and lemmatization.</p>
+
+<p>We can take a look at Obama&rsquo;s before wrapping all of these steps into one function.</p>
+
+<pre><code class="language-python">obama = inaugural.words('2009-Obama.txt')
+print(obama[0:9])
+
+&gt; ['My', 'fellow', 'citizens', ':', 'I', 'stand', 'here', 'today', 'humbled']
+</code></pre>
+
+<p>Thank god for the <code>.words()</code> method here as it tokenizes the speech for us (although writing a tokenizer isn&rsquo;t too difficult 😉). Tokenization is the process of splitting words up into discrete units instead of storing them as a phrase or document. Here we can see that the tokens are the list of words of President Obama&rsquo;s speech.</p>
+
+<p>Next I&rsquo;m going to remove stopwords (common words) and special characters. Then I will lematize each word so that I am getting each word&rsquo;s root word. For example, &ldquo;ran&rdquo; and &ldquo;run&rdquo; are the same word but in different tenses. It&rsquo;s not really that neat if a President (or their speech writer) just uses different grammatical variations of the same word, is it? These tasks are rather simple, just some basic list manipulation.</p>
+
+<pre><code class="language-python">lemmatizer = WordNetLemmatizer()
+
+obama_cleaned = [word.lower() for word in obama if word not in stopwords.words('english') and word.isalpha()]
+obama_cleaned = [lemmatizer.lemmatize(word) for word in obama_cleaned]
+</code></pre>
+
+<p>Next comes the 🥖 and 🧀 (shut up. they didn&rsquo;t have a butter emoji).</p>
+
+<pre><code class="language-python">unique_words = []
+word_len = []
+counter = 0
+inds = []
+for word in obama_cleaned:
+    inds.append(counter)
+    if word not in unique_words:
+        unique_words.append(word)
+    word_len.append(len(unique_words))
+    counter += 1
+</code></pre>
+
+<p>So above we start with a couple of empty lists. We will use these to store different bits of information. The first empty list, <code>unique_words</code>, will store each unique lemma (lemmatized word) when the iterator comes across one. The second list, <code>word_len</code>, will keep track of the number of unique words at the current word index. <em>You may realize that I said sample above when discussing the curve measurement, but in this case, I can increase the sample size by one rather simply to get a complete picture of the rate change.</em> The final list here, <code>ids</code> is the corresponding word index.</p>
+
+<p>Alright, now I&rsquo;m going to wrap this all in a nice function, add some spice to collect some metadata as we churn through these speeches and finally output a <code>.csv</code>.</p>
+
+<pre><code class="language-python">def collect_curve_data(file):
+    
+    # create lemmatizer and read in corpus
+    lemmatizer = WordNetLemmatizer()
+    corpus = inaugural.words(file)
+    
+    # remove stopwords and special character and lemmatize words
+    cleaned = [word.lower() for word in corpus if word not in stopwords.words('english') and word.isalpha()]
+    cleaned = [lemmatizer.lemmatize(word) for word in cleaned]
+    
+    
+    
+    # the meta data
+    metadata_regex = re.compile(r'(\d\d\d\d)-(\w+)\.txt')
+    meta_match = metadata_regex.search(file)
+    
+    # find the collector's curve
+    unique_words = []
+    word_len = []
+    counter = 0
+    inds = []
+    for word in cleaned:
+        inds.append(counter)
+        if word not in unique_words:
+            unique_words.append(word)
+        word_len.append(len(unique_words))
+        counter += 1
+    
+    # gather the meta data
+    year = [meta_match.group(1)] * len(word_len)
+    president = [meta_match.group(2)] * len(word_len)
+    vocab_size = [len(unique_words)] * len(word_len)
+    
+    # zip data together
+    rows = zip(*[inds, word_len, vocab_size, year, president])
+    
+    # write output
+    write_path = os.getcwd() + '/' + 'output'
+    output_file = '{}/{}{}.csv'.format(write_path, meta_match.group(1), meta_match.group(2))
+    
+    if not os.path.exists(write_path):
+        os.mkdir(write_path)
+        
+    
+    with open(output_file, &quot;w&quot;) as f:
+        writer = csv.writer(f)
+        for row in rows:
+            writer.writerow(row)
+            
+    print('file written to: {}'.format(output_file))
+</code></pre>
+
+<p>Now we just iterate through all of the file ids and a collector&rsquo;s curve for each Presidential inaugural speech should be written.</p>
+
+<pre><code class="language-python">for file in inaugural.fileids():
+    collect_curve_data(file)
+</code></pre>
+
+<h2 id="plotting-the-collector-s-curves">Plotting the Collector&rsquo;s Curves</h2>
+
+<p>And now I&rsquo;m transition to the <code>R</code> portion of this post. Sorry <code>python</code>, none of your libraries are even worthy of standing next to <code>ggplot2</code>. Again, first come the packages.</p>
+
+<pre><code class="language-splus">library(readr)
+library(dplyr)
+library(purrr)
+library(ggplot2)
+</code></pre>
+
+<p>And next we need to do some manipulation just so all of the files are easy to work with. We want them all in one data frame and to read them all from separate files, we need to use <code>purrr</code>&rsquo;s <code>map()</code> and <code>reduce()</code> functionality, along with <code>readr</code> to read in the files.</p>
+
+<pre><code class="language-splus">files &lt;- dir(path = &quot;path/to/output/&quot;, pattern = &quot;*.csv&quot;, full.names = TRUE)
+
+data &lt;- files %&gt;%
+  map(read_csv, col_names = c('inds', 'counts', 'vocab_size', 'year', 'president')) %&gt;% 
+  reduce(rbind)
+</code></pre>
+
+<p>Time for some 👏plots👏!!!! Let&rsquo;s see how Obama did in 2009 in relation to all other Presidents.</p>
+
+<pre><code class="language-splus">obama &lt;- filter(data, president == 'Obama')
+
+ggplot() +
+   geom_line(data = data, aes(x = inds, y = counts, group = year), colour = 'grey') +
+   geom_line(data = obama, aes(x = inds, y = counts), colour = 'blue') + 
+   theme_minimal() +
+   ggtitle(&quot;Obama&quot;, subtitle = &quot;2009&quot;)
+</code></pre>
+
+<p><img src="/img/post3/collectors_obama.png" alt="Obama" /></p>
+
+<p>And that&rsquo;s why they call it a curve. There are a couple of interesting things here. Obama uses quite a few unique words, all together it&rsquo;s around 800 or so. His rate of unique word usage is also pretty high, not the highest but certainly better than a lot of the other Presidents.</p>
+
+<p>But who are the rest of the curves? Let&rsquo;s take a look.</p>
+
+<pre><code class="language-splus">full &lt;- data %&gt;%
+ mutate(combined = paste(year, president), normalized = counts/vocab_size)
+
+part &lt;- data %&gt;%
+ mutate(combined = paste(year, president), normalized = counts/vocab_size) %&gt;%
+ select(-combined)
+ 
+ggplot() +
+  geom_line(data = part, aes(inds, counts, group = year), colour = 'grey', size = .5) +
+  geom_line(data = full, aes(inds, counts, colour = combined)) +
+  facet_wrap(~combined) + 
+  theme_minimal() +
+  theme(legend.position=&quot;none&quot;,
+        axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+</code></pre>
+
+<p><img src="/img/post3/collectors_all-presidents.png" alt="All Presidents" /></p>
+
+<p>There are a couple things to note. 1973 Washington must have had somewhere better to be. For Harrison, this was the highlight of his life (I guess that makes sense). Okay, these two observations are simply assuming that there are fewer/more unique words simply because the speeches were shorter/longer. I don&rsquo;t know that for sure, but it would be easy to find out. I willing to bet on it. Pierce kept things interesting throughout his speech, at least word-wise. That can not be said for 1973 Nixon.</p>
+
+<h2 id="wrap-things-up">Wrap Things Up</h2>
+
+<p>Collector&rsquo;s Curves are actually interesting things. Typically they are not used in such a way but they can provide some interesting insight into the diversity of different things. If you have any comments or suggestions, please feel free to leave them! I will touch on collector&rsquo;s curves again as it pertains to the linguistic diversity of a region.</p>
+
+         <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "gradient-dissents" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+          </div>
+      </div>
+  </div>
+  <script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.cookie.js"> </script>
+<script src="/js/ekko-lightbox.js"></script>
+<script src="/js/jquery.scrollTo.min.js"></script>
+<script src="/js/masonry.pkgd.min.js"></script>
+<script src="/js/imagesloaded.pkgd.min.js"></script>
+<script src="/js/owl.carousel.min.js"></script>
+<script src="/js/front.js"></script>
+
+</body>
+</html>

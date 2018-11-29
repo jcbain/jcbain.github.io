@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Geographic Distance Subsets in R</title>
+<meta name="description" content="Describe your website">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="all,follow">
+<meta name="googlebot" content="index,follow,snippet,archive">
+<link rel="stylesheet" href="https://jcbain.github.io/css/bootstrap.min.css">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,300,700,400italic">
+<link rel="stylesheet" href="https://jcbain.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://jcbain.github.io/css/owl.carousel.css">
+<link rel="stylesheet" href="https://jcbain.github.io/css/owl.theme.css">
+
+
+  <link href="https://jcbain.github.io/css/style.violet.css" rel="stylesheet" id="theme-stylesheet">
+
+ 
+
+  
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+
+<link href="https://jcbain.github.io/css/custom.css" rel="stylesheet">
+<link rel="shortcut icon" href="https://jcbain.github.io/img/favicon.png">
+
+
+</head>
+<body>
+  <div id="all">
+      <div class="container-fluid">
+          <div class="row row-offcanvas row-offcanvas-left">
+              <div id="sidebar" class="col-xs-6 col-sm-4 col-md-3 sidebar-offcanvas">
+  <div class="sidebar-content">
+    <h1 class="sidebar-heading"><a href="https://jcbain.github.io/">James Bain</a></h1>
+    
+      <p class="sidebar-p">I am a creative illustrator and graphic designer with more than 10 years of experience.</p>
+    
+      <p class="sidebar-p">Originally from Toronto, currently based in London.</p>
+    
+    <ul class="sidebar-menu">
+      
+        <li><a href="https://jcbain.github.io/portfolio/">Home</a></li>
+      
+        <li><a href="https://jcbain.github.io/about/">About</a></li>
+      
+        <li><a href="https://jcbain.github.io/contact/">Get in touch</a></li>
+      
+    </ul>
+    <p class="social">
+  
+  
+  
+  <a href="https://twitter.com/gymbrane" data-animate-hover="pulse" class="external twitter">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  <a href="mailto:jamescbain@gmail.com" data-animate-hover="pulse" class="email">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://linkedin.com/in/james-bain-971805123/" data-animate-hover="pulse" class="external">
+    <i class="fa fa-linkedin"></i>
+  </a>
+  
+  
+  <a href="https://stackoverflow.com/users/2969279/gymbrane?tab=profile" data-animate-hover="pulse" class="external">
+    <i class="fa fa-stack-overflow"></i>
+  </a>
+  
+  
+  <a href="https://github.com/jcbain/" data-animate-hover="pulse" class="external">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+</p>
+
+
+    <div class="copyright">
+      <p class="credit">
+        
+          &copy;2016 James Chester Bain
+        
+        | Template by <a href="https://bootstrapious.com/free-templates" class="external">Bootstrapious.com</a>
+
+&amp; ported to Hugo by <a href="https://github.com/kishaningithub">Kishan B</a>
+
+      </p>
+    </div>
+  </div>
+</div>
+
+              
+<div class="col-xs-12 col-sm-8 col-md-9 content-column white-background">
+  <div class="small-navbar visible-xs">
+  <button type="button" data-toggle="offcanvas" class="btn btn-ghost pull-left"> <i class="fa fa-align-left"> </i>Menu</button>
+  <h1 class="small-navbar-heading"><a href="https://jcbain.github.io/">James Bain</a></h1>
+</div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="content-column-content">
+         <h1>Geographic Distance Subsets in R</h1>
+         
+
+<p>This was one of those moments where my Googling ability failed me. For learning purposes, this is great, but in terms of time, well I&rsquo;m never getting those couple of days in February back. So this is a story about how I thought I solved a problem that had yet to be solved. This is also a story about how I was stupid to think that I was the first to solve a problem that must be fairly common.</p>
+
+<p>I&rsquo;m interested in cities and their people, and city metropolitan areas often span multiple counties, however, not all counties are equal particularly in terms of area. Seriously, look up San Bernardino county, California and see how many New England states you can fit inside it. Well, the problem is that you are often not interested in all of the super-geographies during an analysis. Instead, you are interested in some sub-geographies that make up a certain radius around a coordinate. This was my issue and this post is going to walk you through two different solutions: one out of naïveté and the other a bit more researched.</p>
+
+<p>Kansas City is the perfect candidate to test subsetting around a coordinate. Its metropolitan area spans 9 counties and 2 states (the majority in Missouri and some in Kansas). Just to be exhaustive, I will be collecting on a 15 county area. It also happens to be my place of birth and where I spent the majority of the first 18 years of my life. I will be using <code>tidycensus</code> to gather the Census tracts for each of these counties along with the 2015 American Community Survey estimates on the proportion of Black Americans living in each tract. Take a look at my <a href="https://jcbain.github.io/blog/diversity-with-tidycensus/">previous post</a> for a more detailed explanation of using <code>tidycensus</code> to collect ACS data. First we will load in our packages and then gather our data.</p>
+
+<pre><code class="language-r">library(tidyverse)  
+library(tidycensus)
+library(sf) 
+library(vegan)
+library(viridis)
+library(tigris)
+library(ggthemes)
+
+options(tigris_class = &quot;sf&quot;)
+options(tigris_use_cache = TRUE)
+
+# ACS 2015 race variable codes
+
+racevars = c('B02001_001E', 'B02001_003E')
+
+# Counties 
+
+places &lt;- c('MO,Clay', 'MO,Jackson', 'MO,Platte', 'MO,Cass', 'MO,Lafayette',
+            'MO,Ray', 'MO,Clinton', 'MO,Bates', 'MO,Caldwell', 'KS,Johnson',
+            'KS,Wyandotte', 'KS,Leavenworth', 'KS,Miami', 'KS,Linn', 'KS,Franklin')
+
+# Collect the variables
+
+pop &lt;- reduce(
+  map(places, function(x) {
+    get_acs(geography = &quot;tract&quot;, variables = racevars, 
+            state = str_split(x ,pattern = ',')[[1]][1],county = str_split(x,pattern = ',')[[1]][2])
+  }), 
+  rbind
+)
+
+# Collect the simple features for mapping
+
+geographies &lt;- reduce(
+  map(places, function(x) {
+    get_acs(geography = &quot;tract&quot;,  variables = &quot;B01003_001&quot;,
+            state = str_split(x ,pattern = ',')[[1]][1],county = str_split(x,pattern = ',')[[1]][2] ,
+            geometry = TRUE)
+  }), 
+  rbind
+)
+</code></pre>
+
+<p>Then I have to do some pre-processing. <code>B02001_001E</code> is the variable for the total number of people estimate for the selected geography and <code>B02001_003E</code> is the estimate of African Americans within a geography. I want a proportion instead of raw count so I have to convert the current <code>pop</code> data frame into wide format. Wide format allows me to use mutate in order to calculate a proportion. I then join this back to the geographic simple features data frame <code>geographies</code> so that we can visualize the proportion graphically.</p>
+
+<pre><code class="language-r">pop %&lt;&gt;%
+  select(-moe) %&gt;%
+  spread(variable, estimate) %&gt;%
+  group_by(GEOID) %&gt;%
+  mutate(aa = (B02001_003/B02001_001)) %&gt;%
+  ungroup()
+
+kc &lt;- geographies %&gt;%
+  left_join(pop, by = 'GEOID') 
+</code></pre>
+
+<p>Let&rsquo;s go ahead and visualize what we have here.</p>
+
+<pre><code class="language-r">kc %&gt;%
+  ggplot(aes(fill = aa)) + 
+  geom_sf( colour = '#ffffff', size = 0.1) + 
+  scale_fill_viridis(option = &quot;inferno&quot;, direction = -1) +
+  labs(title = &quot;Kansas City's Black American Population&quot;,
+       subtitle = &quot;Proportion by Census Tract&quot; ,
+       caption = 'Data: 2015 American Community Survey')
+</code></pre>
+
+<p><img src="/img/post2/kc_aa_prop_full.png" alt="Kansas City Map" /></p>
+
+<p>Oh my! I&rsquo;m more interested in the city center and the surrounding suburbs, not really those who are in the exoburbs. Let&rsquo;s try those within a 40 kilometer radius of the center of Kansas City, MO. Any tract that is captured in this circled area below is permitted. Everyone else, well thanks for playing and perhaps next time.</p>
+
+<p><img src="/img/post2/kc_aa_selection.png" alt="Kansas City Selection" /></p>
+
+<p>Before I dive into my solutions, I want to extend my highest praise for the <code>sf</code> package. It is written with usability in mind so if you are working with simple features, checkout <code>sf</code> if you haven&rsquo;t already. It also integrates with the <code>dplyr</code> pipe (<code>%&gt;%</code>) so HOLLA 🙌!!!</p>
+
+<h4 id="attempt-1-lessons-in-naïveté">Attempt 1: <em>Lessons in Naïveté</em></h4>
+
+<p>I felt okay about this method until I came across a much cleaner and more elegant way of achieving the stated goal but I am also a believer in working through problems on your own and configuring your own solutions, even if it means embarrassing yourself when you put it on the web.</p>
+
+<p>My algorithm is as follows. First, declare a center point for the city of Kansas City. This was as difficult as Googling &lsquo;Kansas City coordinates&rsquo;. Then, I would write a function that can be applied row-wise to a data frame to calculate the distance between the row&rsquo;s simple feature and the geographic center of Kansas City. I run this function over the <code>kc</code> data frame created above. Then I simply subset for those rows within 40 km and then plot. Voilà!</p>
+
+<pre><code class="language-r"># Kansas City Coordinates to calculate distance from 
+kc_center &lt;- st_sfc(st_point(c(-94.5786 ,  39.0997)))
+kc_center = st_sf(geom = kc_center)
+st_crs(kc_center) = 4326
+
+# function to calculate the closet point of each census tract
+find_distance &lt;- function(row, coord){
+  row %&gt;% 
+    st_cast('POINT') %&gt;%
+    st_transform(crs = 32119) %&gt;%
+    st_distance(st_transform(coord, crs = 32119)) %&gt;%
+    min()
+}
+
+kc_sub &lt;- kc %&gt;% 
+  by_row(.collate = &quot;cols&quot;, function(row){
+    row %&gt;% 
+      st_cast('POINT') %&gt;%
+      st_transform(crs = 32119) %&gt;%
+      st_distance(st_transform(kc_center, crs = 32119)) %&gt;%
+      min() %&gt;% 
+      unlist() 
+  })
+
+# subset and plot
+kc_sub %&gt;% 
+  filter(.out &lt;= 40000) %&gt;%
+  ggplot(aes(fill = aa)) + 
+  geom_sf( colour = '#ffffff', size = 0.1) + 
+  scale_fill_viridis(option = &quot;inferno&quot;, direction = -1) +
+  labs(title = &quot;Kansas City's Black American Population&quot;,
+       subtitle = &quot;Proportion by Census Tract&quot; ,
+       caption = 'Data: 2015 American Community Survey')
+</code></pre>
+
+<p><img src="/img/post2/kc_40_original.png" alt="KC 40km" /></p>
+
+<p>This worked but there was something that didn&rsquo;t sit well with me about all of this code. It was too much for something that had to be a lot more common. So for the second time in two days I found myself checking the interwebs for those who have surely done this task.</p>
+
+<h4 id="attempt-2-lessons-in-humility">Attempt 2: <em>Lessons in Humility</em></h4>
+
+<p>This method requires me to transform the default Coordinate Reference System (CRS) for the <code>kc</code> data frame but after you get through that, the following functions are rather intuitive. It requires you specifying the point coordinates of the center of the city, similar to the first solution, but then creating a buffer of <em>x</em> distance around this point. From there it is as simple as finding the intersection of this buffer and the <code>kc</code> data frame and then subsetting the data based off of this intersection.</p>
+
+<pre><code class="language-r"># convert crs 
+
+kc_sf &lt;- st_sf(kc)
+new_proj &lt;- &quot;+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs&quot;
+kc_sf &lt;- st_transform(kc_sf, st_crs(new_proj))
+
+# create buffer of 40 km
+kc_ctr_sfc &lt;- st_sfc(st_point(c(-94.5786 ,  39.0997)), crs = 4326)
+kc_ctr_aea_sf &lt;- st_transform(kc_ctr_sfc, st_crs(kc_sf))
+kc_buf_sf &lt;- st_buffer(kc_ctr_aea_sf, 40000)
+
+# find intersection and subset
+kc_buf_intersects &lt;- st_intersects(kc_buf_sf, kc_sf)
+kc_sel_sf &lt;- kc_sf[unlist(kc_buf_intersects),]
+
+# plot
+kc_sel_sf %&gt;%
+  st_transform( crs = 4326) %&gt;%
+  ggplot()+
+  geom_sf(aes(fill = aa), colour = '#ffffff', size = 0.1) + 
+  scale_fill_viridis(option = &quot;inferno&quot;, direction = -1) +
+  labs(title = &quot;Kansas City's Black American Population&quot;,
+       subtitle = &quot;Proportion by Census Tract&quot; ,
+       caption = 'Data: 2015 American Community Survey')
+</code></pre>
+
+<p>And this renders&hellip;</p>
+
+<p><img src="/img/post2/kc_40_remake.png" alt="KC 40km remake" /></p>
+
+<p>Okay, the good news is that my original solution and the second solution render the same map. That&rsquo;s a good sign that they are working. The other (neutral) news is that I want to zoom in a bit more. Let&rsquo;s say 20 kilometers from the city center. Since this task was becoming somewhat repetitive I thought a function could really help out&hellip;</p>
+
+<pre><code class="language-r">subset_map &lt;- function(df, long, lat, dist = 40000){
+  # Change CRS for buffer
+  df_sf = sf::st_sf(df)
+  new_proj = &quot;+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs&quot;
+  df_sf = sf::st_transform(df_sf, sf::st_crs(new_proj))
+  
+  # Prepare buffer around center point
+  cntr_pnt &lt;- sf::st_sfc(sf::st_point(c(long ,  lat)), crs = 4326)
+  cntr_aea_sf &lt;- sf::st_transform(cntr_pnt, sf::st_crs(df_sf))
+  buff &lt;- sf::st_buffer(cntr_aea_sf, dist)
+  
+  # Subset original data
+  intersection &lt;- sf::st_intersects(buff, df_sf)
+  subset &lt;- df_sf[unlist(intersection),]
+  
+  subset
+  
+}
+</code></pre>
+
+<p>This made things a lot easier. Oh and just for the hell of it I&rsquo;m going to add a layer of highways, which can be found <a href="http://www.marc.org/Data-Economy/Maps-and-GIS/GIS-Data/GIS-Datasets">here</a>.</p>
+
+<pre><code class="language-r">highways &lt;- st_read('~/Downloads/highway_system/highway_system.shp')
+
+subset_map(kc_sub, -94.5786, 39.0997, dist = 20000) %&gt;%
+  ggplot()+
+  geom_sf(aes(fill = aa), colour = '#ffffff', size = 0.1) + 
+  geom_sf(data = highways, color = '#d1d0cf') +
+  theme_mapper()+
+  scale_fill_viridis(option = &quot;inferno&quot;, direction = -1) +
+  labs(title = &quot;Kansas City's Black American Population&quot;,
+       subtitle = &quot;Proportion by Census Tract&quot; ,
+       caption = 'Data: 2015 American Community Survey')
+</code></pre>
+
+<p><img src="/img/post2/kc_20_full_hwy.png" alt="KC 40km remake" /></p>
+
+<p>Whoops! The highways layer would look better if it were also subset.</p>
+
+<pre><code class="language-r">highway_sub &lt;- subset_map(highways, -94.5786, 39.0997, dist = 20000)
+
+subset_map(kc_sub, -94.5786, 39.0997, dist = 20000) %&gt;%
+  ggplot()+
+  geom_sf(aes(fill = aa), colour = '#ffffff', size = 0.1) + 
+  geom_sf(data = highway_sub, color = '#d1d0cf') +
+  theme_mapper()+
+  scale_fill_viridis(option = &quot;inferno&quot;, direction = -1) +
+  labs(title = &quot;Kansas City's Black American Population&quot;,
+       subtitle = &quot;Proportion by Census Tract&quot; ,
+       caption = 'Data: 2015 American Community Survey')
+</code></pre>
+
+<p><img src="/img/post2/kc_20_full_sub.png" alt="KC 40km remake" /></p>
+
+<p>And there we have it! And once again&hellip;</p>
+
+<p><strong>Links that have helped me along the way&hellip;</strong></p>
+
+<ul>
+<li><a href="https://cengel.github.io/rspatial/3_spDataOps.nb.html">Operations with Spatial Vector Data in R</a> by <em>Claudia A Engel</em></li>
+<li><a href="spatialreference.org">Introduction to spatial site-suitability analysis in R</a> by <em>Ken Steif</em></li>
+</ul>
+
+         <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "gradient-dissents" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+          </div>
+      </div>
+  </div>
+  <script src="https://jcbain.github.io/js/jquery.min.js"></script>
+<script src="https://jcbain.github.io/js/bootstrap.min.js"></script>
+<script src="https://jcbain.github.io/js/jquery.cookie.js"> </script>
+<script src="https://jcbain.github.io/js/ekko-lightbox.js"></script>
+<script src="https://jcbain.github.io/js/jquery.scrollTo.min.js"></script>
+<script src="https://jcbain.github.io/js/masonry.pkgd.min.js"></script>
+<script src="https://jcbain.github.io/js/imagesloaded.pkgd.min.js"></script>
+<script src="https://jcbain.github.io/js/owl.carousel.min.js"></script>
+<script src="https://jcbain.github.io/js/front.js"></script>
+
+</body>
+</html>

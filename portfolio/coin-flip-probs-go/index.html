@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Coin Flip Probability with Go</title>
+<meta name="description" content="Describe your website">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="all,follow">
+<meta name="googlebot" content="index,follow,snippet,archive">
+<link rel="stylesheet" href="https://jcbain.github.io/css/bootstrap.min.css">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,300,700,400italic">
+<link rel="stylesheet" href="https://jcbain.github.io/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://jcbain.github.io/css/owl.carousel.css">
+<link rel="stylesheet" href="https://jcbain.github.io/css/owl.theme.css">
+
+
+  <link href="https://jcbain.github.io/css/style.violet.css" rel="stylesheet" id="theme-stylesheet">
+
+ 
+
+  
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+
+<link href="https://jcbain.github.io/css/custom.css" rel="stylesheet">
+<link rel="shortcut icon" href="https://jcbain.github.io/img/favicon.png">
+
+
+</head>
+<body>
+  <div id="all">
+      <div class="container-fluid">
+          <div class="row row-offcanvas row-offcanvas-left">
+              <div id="sidebar" class="col-xs-6 col-sm-4 col-md-3 sidebar-offcanvas">
+  <div class="sidebar-content">
+    <h1 class="sidebar-heading"><a href="https://jcbain.github.io/">James Bain</a></h1>
+    
+      <p class="sidebar-p">I am a creative illustrator and graphic designer with more than 10 years of experience.</p>
+    
+      <p class="sidebar-p">Originally from Toronto, currently based in London.</p>
+    
+    <ul class="sidebar-menu">
+      
+        <li><a href="https://jcbain.github.io/portfolio/">Home</a></li>
+      
+        <li><a href="https://jcbain.github.io/about/">About</a></li>
+      
+        <li><a href="https://jcbain.github.io/contact/">Get in touch</a></li>
+      
+    </ul>
+    <p class="social">
+  
+  
+  
+  <a href="https://twitter.com/gymbrane" data-animate-hover="pulse" class="external twitter">
+    <i class="fa fa-twitter"></i>
+  </a>
+  
+  
+  
+  <a href="mailto:jamescbain@gmail.com" data-animate-hover="pulse" class="email">
+    <i class="fa fa-envelope"></i>
+  </a>
+  
+  
+  <a href="https://linkedin.com/in/james-bain-971805123/" data-animate-hover="pulse" class="external">
+    <i class="fa fa-linkedin"></i>
+  </a>
+  
+  
+  <a href="https://stackoverflow.com/users/2969279/gymbrane?tab=profile" data-animate-hover="pulse" class="external">
+    <i class="fa fa-stack-overflow"></i>
+  </a>
+  
+  
+  <a href="https://github.com/jcbain/" data-animate-hover="pulse" class="external">
+    <i class="fa fa-github"></i>
+  </a>
+  
+  
+</p>
+
+
+    <div class="copyright">
+      <p class="credit">
+        
+          &copy;2016 James Chester Bain
+        
+        | Template by <a href="https://bootstrapious.com/free-templates" class="external">Bootstrapious.com</a>
+
+&amp; ported to Hugo by <a href="https://github.com/kishaningithub">Kishan B</a>
+
+      </p>
+    </div>
+  </div>
+</div>
+
+              
+<div class="col-xs-12 col-sm-8 col-md-9 content-column white-background">
+  <div class="small-navbar visible-xs">
+  <button type="button" data-toggle="offcanvas" class="btn btn-ghost pull-left"> <i class="fa fa-align-left"> </i>Menu</button>
+  <h1 class="small-navbar-heading"><a href="https://jcbain.github.io/">James Bain</a></h1>
+</div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="content-column-content">
+         <h1>Coin Flip Probability with Go</h1>
+         <p>I decided to return to this problem of average probability of getting two heads flipped in a row versus a heads then a tails. I know, beat a dead horse much (💀🐴)? Hear me out&hellip;</p>
+
+<p>Sadly, our 100 year old oak in the front yard is slowly dying, which means that for the majority of the day today, I didn&rsquo;t have electricity&hellip;and electricity causes internet, which means that I also didn&rsquo;t have internet. I know, I could have gone to a coffee shop, campus, hacked into my neighbors&rsquo; &ldquo;toolshed&rdquo; network, but here&rsquo;s the thing, taking down an oak tree makes a lot of noise. I have 2 dogs and one we suspect had quite an abusive past and her and loud noises&hellip;well&hellip;let&rsquo;s just say she can&rsquo;t deal.</p>
+
+<p>In an effort to keep them comfortable, I stayed home. It was a good opportunity for me to take the offline tutorials to learn <code>go</code>. I&rsquo;ve been meaning to do so because it&rsquo;s fast and the logo is really cute.</p>
+
+<p><img src="/img/post5/go_logo.png" alt="Go Logo" /></p>
+
+<p>So I thought this would be a good learning experience. The tutorials are great but this problem is a good way to start thinking about the language. If you need a refresher of what I am talking about, <a href="https://jcbain.github.io/blog/coin-flip-probs/">here&rsquo;s</a> my post about it in <code>python</code>.</p>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">I needed a distraction from my dissertation so I took inspiration from this <a href="https://twitter.com/drob?ref_src=twsrc%5Etfw">@drob</a> tweet and adapted it to python and then wrote a short blog post on it. Also extended it to take any pattern sequence! <a href="https://twitter.com/hashtag/pydata?src=hash&amp;ref_src=twsrc%5Etfw">#pydata</a> <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://twitter.com/hashtag/probability?src=hash&amp;ref_src=twsrc%5Etfw">#probability</a> <a href="https://t.co/QgZ3HLwm64">https://t.co/QgZ3HLwm64</a> <a href="https://t.co/VaLWtRwnhU">https://t.co/VaLWtRwnhU</a></p>&mdash; 🦕 James Bain 🦖 (@gymbrane) <a href="https://twitter.com/gymbrane/status/1008939111925809153?ref_src=twsrc%5Etfw">June 19, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>Keep in mind I am still learning here, so there&rsquo;s most certainly a more elegant solution but here we go&hellip;step by step.</p>
+
+<p>Step 1: Load in packages</p>
+
+<pre><code class="language-go">package main
+
+import (
+        &quot;fmt&quot;
+        &quot;math/rand&quot;
+        &quot;time&quot;
+        &quot;reflect&quot;
+)
+</code></pre>
+
+<p>I&rsquo;m going to say one thing here; I really like how it throws an error when I don&rsquo;t use a package that I load in.</p>
+
+<p>Step 2: Write a function to simulate a coin flip:</p>
+
+<pre><code class="language-go">// simulate flipping a fair coin
+func FlipCoin() string {
+        rand.Seed(time.Now().UnixNano())
+
+        if flipint := rand.Intn(2); flipint == 0 {
+               return &quot;tails&quot;
+        }
+        return &quot;heads&quot;
+}
+</code></pre>
+
+<p>The <code>rand</code> package provides some pretty convenient methods, however, they are deterministic by default and therefore setting the seed is important. I know, seed setting makes it deterministic too, which is why I followed the convention of passing the current nanosecond as the seed. <code>rand.Intn(2)</code> also returns either 0 or 1. Perfect!</p>
+
+<p>Step 3: Flip until condition is met.</p>
+
+<pre><code class="language-go">// flip until condition is met
+func FlipCondition() int {
+        flips    := [2]string{FlipCoin(), FlipCoin()}
+        previous := 0
+        current  := 1
+        s        := flips[previous: current+1]
+        cond     := []string{&quot;heads&quot;,&quot;tails&quot;}
+        numflips := 2
+
+        for !reflect.DeepEqual(s, cond) {
+                s[previous] = s[current]
+                s[current] = FlipCoin()
+                numflips +=1
+        }
+        return numflips
+}
+</code></pre>
+
+<p>In this function, it is currently set to stop whenever it finds heads and then tails.</p>
+
+<p>Step 4: Run many trials and return a slice.</p>
+
+<pre><code class="language-go">// run multiple trials
+func FlippityFlip(numtrials int) []int {
+        vals := make([]int, numtrials)
+        for i := 0; i &lt; numtrials; i++ {
+                vals[i] = FlipCondition()
+        }
+        return vals
+}
+</code></pre>
+
+<p>This simply runs <code>FlipCondition()</code> <code>numtrials</code> times and saves it in a slice.</p>
+
+<p>Step 5: Implement a function to find the mean.</p>
+
+<pre><code class="language-go">
+// mean function
+func mean(vals[]int) float64 {
+        tot := 0.0
+        for _, v := range vals{
+                tot += float64(v)
+        }
+        return tot/float64(len(vals))
+}
+</code></pre>
+
+<p>Step 6: Wrap it all together and find the average in the <code>main()</code> function.</p>
+
+<pre><code class="language-go">func main() {
+        trials := FlippityFlip(10000)
+        fmt.Println(mean(trials))
+}
+</code></pre>
+
+<p>This runs it 10,000 times and then calculates the average. The final step is to make my way over to a terminal and run the <code>go run</code> command on this file to assess the output.</p>
+
+<p>For heads then tails:</p>
+
+<pre><code class="language-bash">go run coinflip.go
+4.0054
+</code></pre>
+
+<p>For heads then heads:</p>
+
+<pre><code class="language-bash">go run coinflip.go
+5.9916
+</code></pre>
+
+<p>It still works! You know, the great thing about this exercises is that I knew what to expect. This served as a sort of check on my code since, you know, I&rsquo;m new to all of this&hellip;</p>
+
+<p>Oh, if you want to take a look at the code it <a href="https://github.com/jcbain/coinflipgo">right here</a>.</p>
+
+         <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "gradient-dissents" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+          </div>
+      </div>
+  </div>
+  <script src="https://jcbain.github.io/js/jquery.min.js"></script>
+<script src="https://jcbain.github.io/js/bootstrap.min.js"></script>
+<script src="https://jcbain.github.io/js/jquery.cookie.js"> </script>
+<script src="https://jcbain.github.io/js/ekko-lightbox.js"></script>
+<script src="https://jcbain.github.io/js/jquery.scrollTo.min.js"></script>
+<script src="https://jcbain.github.io/js/masonry.pkgd.min.js"></script>
+<script src="https://jcbain.github.io/js/imagesloaded.pkgd.min.js"></script>
+<script src="https://jcbain.github.io/js/owl.carousel.min.js"></script>
+<script src="https://jcbain.github.io/js/front.js"></script>
+
+</body>
+</html>
