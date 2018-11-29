@@ -1,1 +1,96 @@
 /* your styles go here */
+
+
+@import url('https://fonts.googleapis.com/css?family=Oswald');
+@import url('https://fonts.googleapis.com/css?family=Quicksand');
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Dosis');
+
+
+.sidebar-heading a {
+	color: #595c60; /* dark grey */
+	font-size: 44px;
+	font-family: 'Dosis'
+}
+
+.sidebar-heading a:hover{
+	color: #931eaa; /* purple */
+}
+
+.sidebar-p {
+	color:  #931eaa;
+	font-family: 'Raleway';
+	font-size: 20px;
+}
+
+.row-offcanvas-left {
+	background-color: #f4f4f4;
+}
+
+.box-masonry {
+    border: 1px #bcbcbc solid;
+}
+.box-masonry-text {
+	background-color: #f2f2ef;
+	border-top: 1px #bcbcbc solid;
+}
+
+h4 a {
+	color: #8e8d8a;
+	font-family: 'Oswald'
+}
+
+h4 a:hover {
+	background-color: #ffbfff;
+	font-size: 18px
+}
+
+.box-masonry-description p {
+	font-family: 'Raleway'
+}
+
+
+.white-background , .white-background .row , .content-column-content {
+	background-color: #f4f4f4
+}
+
+.white-background {
+	background-color: #f4f4f4
+}
+
+.content-column.white-background {
+    background-color: #f4f4f4
+}
+
+h1 {
+	color: #595c60;
+	font-size: 38px;
+	font-family: 'Dosis';
+}
+
+.content-column-content h1 {
+	font-family: 'Raleway';
+	color: #595c60
+}
+
+.content-column-content h1+ p , h4 {
+	font-family: 'Raleway';
+	color: #931eaa;
+	font-size: 24px
+}
+
+.social--big a {
+	color: #931eaa
+}
+
+a, a:visited, a:active {
+  text-decoration: none;
+  border-bottom: 1px #bcbcbc solid;
+}
+
+a:hover {
+  text-decoration: underline;
+  border: none;
+}
