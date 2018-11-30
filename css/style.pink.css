@@ -371,7 +371,7 @@ SIDEBAR + RIGHT COLUMN
   color: #999999;
 }
 .sidebar-menu li.active a {
-  color: #ef5285;
+  color: #f4cd41;
   font-weight: bold;
 }
 .sidebar-menu li.active:before {
@@ -379,7 +379,7 @@ SIDEBAR + RIGHT COLUMN
 }
 .sidebar-menu li:hover a {
   text-decoration: none;
-  color: #ef5285;
+  color: #f4cd41;;
 }
 .sidebar-menu li:hover:before {
   color: #ef5285;
@@ -605,8 +605,9 @@ p.social a {
              */
 }
 p.social a:hover {
-  color: #ef5285;
-  border-color: #ef5285;
+  color: #f4cd41;
+  border-color: #4f4f4e;
+  background-color: #212120;
 }
 p.social a i {
   vertical-align: bottom;

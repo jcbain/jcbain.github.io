@@ -10,17 +10,17 @@
 
 
 .sidebar-heading a {
-	color: #595c60; /* dark grey */
+	color: #f4cd41; /* dark yellow */
 	font-size: 44px;
 	font-family: 'Dosis'
 }
 
 .sidebar-heading a:hover{
-	color: #931eaa; /* purple */
+	color: #d6b439; /* darker yellow */
 }
 
 .sidebar-p {
-	color:  #931eaa;
+	color: #474642;
 	font-family: 'Raleway';
 	font-size: 20px;
 }
@@ -32,13 +32,14 @@
 .box-masonry {
     border: 1px #bcbcbc solid;
 }
+
 .box-masonry-text {
 	background-color: #f2f2ef;
 	border-top: 1px #bcbcbc solid;
 }
 
 h4 a {
-	color: #8e8d8a;
+	color: #d6b439;
 	font-family: 'Oswald'
 }
 
@@ -72,12 +73,12 @@ h1 {
 
 .content-column-content h1 {
 	font-family: 'Raleway';
-	color: #595c60
+	color: #595c60;
 }
 
 .content-column-content h1+ p , h4 {
 	font-family: 'Raleway';
-	color: #931eaa;
+	color: #595c60;
 	font-size: 24px
 }
 
