@@ -10,6 +10,9 @@ Startup Template By Bootstrapious.com
 GENERAL
 =====================
 */
+
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+
 html,
 body {
   overflow-x: hidden;
@@ -354,6 +357,7 @@ SIDEBAR + RIGHT COLUMN
   font-size: 14px;
 }
 .sidebar-menu {
+  font-family: 'Comfortaa';
   list-style-type: none;
   padding-left: 20px;
   margin-bottom: 40px;
@@ -656,14 +660,14 @@ COPYRIGHT
 =====================
 */
 .copyright {
-  color: #999999;
+  color: #999998;
   font-size: 13px;
 }
 .copyright p.credit {
   margin-bottom: 10px;
 }
 .copyright p.credit a {
-  color: #999999;
+  color: #d6b439;
 }
 @media (max-width: 991px) {
   .copyright p.credit {

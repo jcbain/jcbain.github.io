@@ -14,8 +14,8 @@ disqusshortname     = "gradient-dissents"
   description = "Describe your website"
   copyright = "&copy;2016 James Chester Bain"
   sidebarAbout = [
-    "I'm an Anthropology PhD candidate who interested in demographic diversity, computational linguistics and geographic analysis.",
-    "From the middle"
+    "demographic diversity, computational linguistics and geographic analysis.",
+    "🐕 ☕️ 🦕"
   ]
   # Contact page
      # Since this template is static, the contact form uses www.formspree.io as a

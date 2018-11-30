@@ -4,7 +4,7 @@
 @import url('https://fonts.googleapis.com/css?family=Oswald');
 @import url('https://fonts.googleapis.com/css?family=Quicksand');
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
-@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 @import url('https://fonts.googleapis.com/css?family=Dosis');
 
@@ -12,7 +12,7 @@
 .sidebar-heading a {
 	color: #f4cd41; /* dark yellow */
 	font-size: 44px;
-	font-family: 'Dosis'
+	font-family: 'Comfortaa'
 }
 
 .sidebar-heading a:hover{
@@ -21,8 +21,12 @@
 
 .sidebar-p {
 	color: #474642;
-	font-family: 'Raleway';
+	font-family: 'Quicksand';
 	font-size: 20px;
+}
+
+sidebar-menu {
+    font-family: 'Comfortaa';
 }
 
 .row-offcanvas-left {
@@ -40,7 +44,7 @@
 
 h4 a {
 	color: #d6b439;
-	font-family: 'Oswald'
+	font-family: 'Dosis'
 }
 
 h4 a:hover {
@@ -68,7 +72,7 @@ h4 a:hover {
 h1 {
 	color: #595c60;
 	font-size: 38px;
-	font-family: 'Dosis';
+	font-family: 'Oswald';
 }
 
 .content-column-content h1 {
