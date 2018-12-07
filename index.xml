@@ -2,68 +2,68 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>James Bain</title>
-    <link>https://jcbain.github.io/portfolioc/</link>
+    <link>https://jcbain.github.io/portfolio/</link>
     <description>Recent content on James Bain</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 07 Feb 2018 23:05:58 -0600</lastBuildDate>
     
-	<atom:link href="https://jcbain.github.io/portfolioc/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://jcbain.github.io/portfolio/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Diversity With Tidycensus</title>
-      <link>https://jcbain.github.io/portfolioc/portfolio/diversity-with-tidycensus/</link>
+      <link>https://jcbain.github.io/portfolio/portfolio/diversity-with-tidycensus/</link>
       <pubDate>Wed, 07 Feb 2018 23:05:58 -0600</pubDate>
       
-      <guid>https://jcbain.github.io/portfolioc/portfolio/diversity-with-tidycensus/</guid>
+      <guid>https://jcbain.github.io/portfolio/portfolio/diversity-with-tidycensus/</guid>
       <description>There are very few recent packages that I can say shaved a month off of my dissertation work, particularly in a language like R where there are 3,000,000 ways to do the same thing. But tidycensus, my hat&amp;rsquo;s off to you 👏👏👏! If you need Census data (or not) I strongly urge you to check out Kyle Walker&amp;rsquo;s tidycensus.
 Diversity is a difficult concept. It might be even more difficult to assess simply because there are several ways to measure it.</description>
     </item>
     
     <item>
       <title>Geographic Distance Subsets in R</title>
-      <link>https://jcbain.github.io/portfolioc/portfolio/geographic-subsets/</link>
+      <link>https://jcbain.github.io/portfolio/portfolio/geographic-subsets/</link>
       <pubDate>Sun, 18 Feb 2018 17:33:28 -0600</pubDate>
       
-      <guid>https://jcbain.github.io/portfolioc/portfolio/geographic-subsets/</guid>
+      <guid>https://jcbain.github.io/portfolio/portfolio/geographic-subsets/</guid>
       <description>This was one of those moments where my Googling ability failed me. For learning purposes, this is great, but in terms of time, well I&amp;rsquo;m never getting those couple of days in February back. So this is a story about how I thought I solved a problem that had yet to be solved. This is also a story about how I was stupid to think that I was the first to solve a problem that must be fairly common.</description>
     </item>
     
     <item>
       <title>Presidential Collector Curves</title>
-      <link>https://jcbain.github.io/portfolioc/portfolio/presidential-collector-curves/</link>
+      <link>https://jcbain.github.io/portfolio/portfolio/presidential-collector-curves/</link>
       <pubDate>Sun, 25 Mar 2018 14:34:39 -0500</pubDate>
       
-      <guid>https://jcbain.github.io/portfolioc/portfolio/presidential-collector-curves/</guid>
+      <guid>https://jcbain.github.io/portfolio/portfolio/presidential-collector-curves/</guid>
       <description>Confession 1: I&amp;rsquo;m less of a person this week. I had my appendix removed on Tuesday. It was my first surgical experience where I was anesthetized, which scared the hell out of me. Turns out that the doctor tells you to take some breaths and the next thing you know you are being woken up by a man named Nate who should really be more interested in your inebriated, albeit transcendental, commentary.</description>
     </item>
     
     <item>
       <title>Coin Flip Probability with Go</title>
-      <link>https://jcbain.github.io/portfolioc/portfolio/coin-flip-probs-go/</link>
+      <link>https://jcbain.github.io/portfolio/portfolio/coin-flip-probs-go/</link>
       <pubDate>Mon, 25 Jun 2018 22:51:22 -0500</pubDate>
       
-      <guid>https://jcbain.github.io/portfolioc/portfolio/coin-flip-probs-go/</guid>
+      <guid>https://jcbain.github.io/portfolio/portfolio/coin-flip-probs-go/</guid>
       <description>I decided to return to this problem of average probability of getting two heads flipped in a row versus a heads then a tails. I know, beat a dead horse much (💀🐴)? Hear me out&amp;hellip;
 Sadly, our 100 year old oak in the front yard is slowly dying, which means that for the majority of the day today, I didn&amp;rsquo;t have electricity&amp;hellip;and electricity causes internet, which means that I also didn&amp;rsquo;t have internet.</description>
     </item>
     
     <item>
       <title>The Opportunity of Geography Part 1: How Denver Highways Segregate Communities</title>
-      <link>https://jcbain.github.io/portfolioc/portfolio/denver1/</link>
+      <link>https://jcbain.github.io/portfolio/portfolio/denver1/</link>
       <pubDate>Sat, 01 Dec 2018 20:11:33 -0500</pubDate>
       
-      <guid>https://jcbain.github.io/portfolioc/portfolio/denver1/</guid>
+      <guid>https://jcbain.github.io/portfolio/portfolio/denver1/</guid>
       <description>Sunday nights are for laundry, mental preparation for the week ahead and House Hunters. It&amp;rsquo;s a bit of a mental reprieve for me; for a few minutes out of the week I can forget about my life and focus on the lives of complete strangers who are making one of the biggest financial decisions they&amp;rsquo;ll ever step into. Sure, I know they choose their house before filming (logistically, that&amp;rsquo;s the only way this show could work) but I still find it refreshing to watch seemingly boring people discuss what sort of floor plan will work for their dinner parties they hope to have.</description>
     </item>
     
     <item>
       <title>Introducing Cuttlefish</title>
-      <link>https://jcbain.github.io/portfolioc/portfolio/cuttlefish-intro/</link>
+      <link>https://jcbain.github.io/portfolio/portfolio/cuttlefish-intro/</link>
       <pubDate>Mon, 30 Jul 2018 20:11:33 -0500</pubDate>
       
-      <guid>https://jcbain.github.io/portfolioc/portfolio/cuttlefish-intro/</guid>
+      <guid>https://jcbain.github.io/portfolio/portfolio/cuttlefish-intro/</guid>
       <description>I created something new. Actually, I am creating something new and I am proud to say that I finally got to name something after my favorite cephalopod, the humble cuttlefish. Don&amp;rsquo;t know what a cuttlefish is?
 here&amp;rsquo;s one
 via GIPHY
@@ -74,20 +74,20 @@ They&amp;rsquo;re basically chameleon squids but more chameleon than a chameleon
     
     <item>
       <title>Coin Flip Probability with Python</title>
-      <link>https://jcbain.github.io/portfolioc/portfolio/coin-flip-probs/</link>
+      <link>https://jcbain.github.io/portfolio/portfolio/coin-flip-probs/</link>
       <pubDate>Mon, 18 Jun 2018 23:30:12 -0500</pubDate>
       
-      <guid>https://jcbain.github.io/portfolioc/portfolio/coin-flip-probs/</guid>
+      <guid>https://jcbain.github.io/portfolio/portfolio/coin-flip-probs/</guid>
       <description>I&amp;rsquo;m writing up my dissertation&amp;hellip;but occasionally I need a distraction. Don&amp;rsquo;t get me wrong, I find studying hate speech very fascinating, but in all honesty, it gets to be a bit much sometimes. The world can be a depressing place. Plus, it&amp;rsquo;s a dissertation; distractions are welcome in any flavor.
 Today my distraction came in the form of a Tweet by David Robinson demonstrating how flipping a coin and getting a heads and then another heads takes 6 flips on average while a heads then a tails only takes 4.</description>
     </item>
     
     <item>
       <title>Hello R Markdown</title>
-      <link>https://jcbain.github.io/portfolioc/post/2015-07-23-r-rmarkdown/</link>
+      <link>https://jcbain.github.io/portfolio/post/2015-07-23-r-rmarkdown/</link>
       <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
       
-      <guid>https://jcbain.github.io/portfolioc/post/2015-07-23-r-rmarkdown/</guid>
+      <guid>https://jcbain.github.io/portfolio/post/2015-07-23-r-rmarkdown/</guid>
       <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
 You can embed an R code chunk like this:
 summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
