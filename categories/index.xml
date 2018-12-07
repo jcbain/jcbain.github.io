@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on James Bain</title>
-    <link>https://jcbain.github.io/portfolio/categories/</link>
+    <link>https://jcbain.github.io/categories/</link>
     <description>Recent content in Categories on James Bain</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
-	<atom:link href="https://jcbain.github.io/portfolio/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://jcbain.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>R</title>
-      <link>https://jcbain.github.io/portfolio/categories/r/</link>
+      <link>https://jcbain.github.io/categories/r/</link>
       <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
       
-      <guid>https://jcbain.github.io/portfolio/categories/r/</guid>
+      <guid>https://jcbain.github.io/categories/r/</guid>
       <description></description>
     </item>
     

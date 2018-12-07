@@ -1,4 +1,4 @@
-baseurl = "https://jcbain.github.io/portfolio"
+baseurl = "https://jcbain.github.io"
 title = "James Bain"
 theme = "hugo-creative-portfolio-theme"
 languageCode = "en-us"
