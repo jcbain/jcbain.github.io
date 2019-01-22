@@ -86,6 +86,36 @@ h1 {
 	font-size: 18px
 }
 
+
+.content-column-content-cv h1 {
+	font-family: 'Raleway';
+	color: #595c60;
+}
+
+.content-column-content-cv h2  {
+	font-family: 'Raleway';
+	color: #595c60;
+	font-size: 24px;
+	margin-bottom: 0px;
+	margin-top: 12px;
+}
+
+.content-column-content-cv p  {
+    padding: 0px;
+    margin: 0 0;
+
+}
+
+.date {
+   font-size: 16px;
+   color: #f4cd41;
+}
+
+.exinfo {
+   font-size: 12px;
+   color: #595c60;
+}
+
 .social--big a {
 	color: #931eaa
 }
