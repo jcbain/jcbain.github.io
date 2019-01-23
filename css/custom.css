@@ -97,7 +97,15 @@ h1 {
 	color: #595c60;
 	font-size: 24px;
 	margin-bottom: 0px;
-	margin-top: 12px;
+	margin-top: 22px;
+}
+
+.content-column-content-cv h4  {
+	font-family: 'Raleway';
+	color: #595c60;
+	font-size: 20px;
+	margin-bottom: 0px;
+	margin-top: 16px;
 }
 
 .content-column-content-cv p  {
