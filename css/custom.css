@@ -30,7 +30,7 @@ sidebar-menu {
 }
 
 .row-offcanvas-left {
-	background-color: #f4f4f4;
+	background-color: #ffffff;
 }
 
 .box-masonry {
@@ -58,15 +58,15 @@ h4 a:hover {
 
 
 .white-background , .white-background .row , .content-column-content {
-	background-color: #f4f4f4
+	background-color: #ffffff
 }
 
 .white-background {
-	background-color: #f4f4f4
+	background-color: #ffffff
 }
 
 .content-column.white-background {
-    background-color: #f4f4f4
+    background-color: #ffffff
 }
 
 h1 {
