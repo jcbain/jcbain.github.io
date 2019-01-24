@@ -137,3 +137,14 @@ a:hover {
   text-decoration: underline;
   border: none;
 }
+
+.spec a{
+  color: #595c60;
+  box-shadow: inset 0 -7px 0 #f687ab;
+  border-bottom: none;
+}
+
+.spec a:hover{
+  color: #595c60;
+  box-shadow: inset 0 -20px 0 #f687ab;
+}
